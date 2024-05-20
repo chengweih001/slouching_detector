@@ -5,7 +5,7 @@
 const URL = "https://teachablemachine.withgoogle.com/models/RxJBvWzam/";
 let model, webcam, ctx, labelContainer, maxPredictions;
 
-async function init() {
+async function initializePostureDetection() {
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
 
