@@ -1,0 +1,14 @@
+{
+    "name": "Slouch coach",
+    "short_name": "slouch coach",
+    "start_url": ".",
+    "display": "standalone",
+    "description": "Stop slouching!",
+    "icons": [
+      {
+        "src": "icon.png",
+        "sizes": "813x813",
+        "type": "image/png"
+      }
+    ]
+  }
