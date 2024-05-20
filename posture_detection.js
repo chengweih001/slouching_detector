@@ -78,7 +78,7 @@ async function predict() {
 }
 function postureChanged(){
     console.log(`posture changed to ${isSlouch}`);
-    Speak(`posture changed to ${isSlouch}`);
+    document.body.dispatchEvent(new CustomEvent("postureChanged",{detail: {isSlouch: isSlouch}}));
     // notifyMe();
 }
 
