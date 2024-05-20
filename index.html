@@ -85,28 +85,8 @@
     }
     function postureChanged(){
         console.log(`posture changed to ${isSlouch}`);
-        if (isSlouch) {
-            setTimeout(slouchStageOne, 1000);
-            setTimeout(slouchStageTwo, 5000);
-            setTimeout(slouchStageThree, 10000);
-        } else {
-            clearTimeout(slouchStageOne);
-            clearTimeout(slouchStageTwo);
-            clearTimeout(slouchStageThree);
-        }
     }
 
-    function slouchStageOne() {
-        console.log('stage one');
-    }
-
-    function slouchStageTwo() {
-        console.log('stage two');
-    }
-
-    function slouchStageThree() {
-        console.log('stage three');
-    }
     function drawPose(pose) {
         if (webcam.canvas) {
             ctx.drawImage(webcam.canvas, 0, 0);
