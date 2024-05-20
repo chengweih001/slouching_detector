@@ -46,6 +46,7 @@
         window.requestAnimationFrame(loop);
     }
     let isSlouch = false;
+    let isFirstPrediction = true;
     async function predict() {
         labels = {
           "Class 1": "straight",
@@ -56,15 +57,20 @@
         const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
         // Prediction 2: run input through teachable machine classification model
         const prediction = await model.predict(posenetOutput);
-
         for (let i = 0; i < maxPredictions; i++) {
             const label =  labels[prediction[i].className];
             const prob = prediction[i].probability.toFixed(2);
+            if (label == 'slouch' && isFirstPrediction && (prob > 0.95)){
+                isSlouch = true;
+                postureChanged();
+                isFirstPrediction = false;
+            }
+
             // Only detect posture change when either slouch / straight up confidence is >0.95
             if (label == 'slouch' && (prob >0.95 || prob < 0.05)){
                 const newIsSlouch = (label === "slouch" && prob > 0.95);
-                isSlouch = newIsSlouch;
-                if (newIsSlouch !== isSlouch){
+                if (newIsSlouch != isSlouch){
+                    isSlouch = newIsSlouch;
                     postureChanged();
                 }
             }
@@ -79,6 +85,27 @@
     }
     function postureChanged(){
         console.log(`posture changed to ${isSlouch}`);
+        if (isSlouch) {
+            setTimeout(slouchStageOne, 1000);
+            setTimeout(slouchStageTwo, 5000);
+            setTimeout(slouchStageThree, 10000);
+        } else {
+            clearTimeout(slouchStageOne);
+            clearTimeout(slouchStageTwo);
+            clearTimeout(slouchStageThree);
+        }
+    }
+
+    function slouchStageOne() {
+        console.log('stage one');
+    }
+
+    function slouchStageTwo() {
+        console.log('stage two');
+    }
+
+    function slouchStageThree() {
+        console.log('stage three');
     }
     function drawPose(pose) {
         if (webcam.canvas) {
