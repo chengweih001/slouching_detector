@@ -45,7 +45,7 @@
         await predict();
         window.requestAnimationFrame(loop);
     }
-
+    let isSlouch = false;
     async function predict() {
         labels = {
           "Class 1": "straight",
@@ -58,15 +58,28 @@
         const prediction = await model.predict(posenetOutput);
 
         for (let i = 0; i < maxPredictions; i++) {
+            const label =  labels[prediction[i].className];
+            const prob = prediction[i].probability.toFixed(2);
+            // Only detect posture change when either slouch / straight up confidence is >0.95
+            if (label == 'slouch' && (prob >0.95 || prob < 0.05)){
+                const newIsSlouch = (label === "slouch" && prob > 0.95);
+                isSlouch = newIsSlouch;
+                if (newIsSlouch !== isSlouch){
+                    postureChanged();
+                }
+            }
+
             const classPrediction =
-                labels[prediction[i].className] + ": " + prediction[i].probability.toFixed(2);
+                label + ": " + prob;
             labelContainer.childNodes[i].innerHTML = classPrediction;
         }
 
         // finally draw the poses
         drawPose(pose);
     }
-
+    function postureChanged(){
+        console.log(`posture changed to ${isSlouch}`);
+    }
     function drawPose(pose) {
         if (webcam.canvas) {
             ctx.drawImage(webcam.canvas, 0, 0);
