@@ -1,3 +1,8 @@
+const UNKNOWN_POSTURE = 'unknown posture';
+const SLOUCHING = 'slouching';
+const SITTING_STRAIGHT = 'sitting straight';
+const STANDING = 'standing';
+
 let stage1TimeoutId;
 let stage2TimeoutId;
 let stage3TimeoutId;
@@ -14,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener(
         "postureChanged",
         (e) => {
-            if (e.detail.isSlouch){
+            if (e.detail.newPosture == SLOUCHING){
                 Speak("No Slouching");
                 curStage = State.SLOUCH_STARTED;
 

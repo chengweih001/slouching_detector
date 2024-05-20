@@ -3,6 +3,51 @@
 
 // the link to your model provided by Teachable Machine export panel
 const URL = "https://teachablemachine.withgoogle.com/models/RxJBvWzam/";
+
+const NOSE = 'nose';
+const LEFT_EYE = 'leftEye';
+const RIGHT_EYE = 'rightEye';
+const LEFT_EAR = 'leftEar';
+const RIGHT_EAR = 'rightEar';
+const LEFT_SHOULDER = 'leftShoulder';
+const RIGHT_SHOULDER = 'rightShoulder';
+const LEFT_ELBOW = 'leftElbow';
+const RIGHT_ELBOW = 'rightElbow';
+const LEFT_WRIST = 'leftWrist';
+const RIGHT_WRISE = 'rightWrist';
+const LEFT_HIP = 'leftHip';
+const RIGHT_HIP = 'rightHip';
+const LEFT_KNEE = 'leftKnee';
+const RIGHT_KNEE = 'rightKnee';
+const LEFT_ANKLE = 'leftAnkle';
+const RIGHT_ANKLE = 'rightAnkle';
+
+const NOSE_IDX = 0;
+const LEFT_EYE_IDX = 1;
+const RIGHT_EYE_IDX = 2;
+const LEFT_EAR_IDX = 3
+const RIGHT_EAR_IDX = 4
+const LEFT_SHOULDER_IDX = 5;
+const RIGHT_SHOULDER_IDX = 6;
+const LEFT_ELBOW_IDX = 7;
+const RIGHT_ELBOW_IDX = 8;
+const LEFT_WRIST_IDX = 9;
+const RIGHT_WRISE_IDX = 10;
+const LEFT_HIP_IDX = 11;
+const RIGHT_HIP_IDX = 12;
+const LEFT_KNEE_IDX = 13;
+const RIGHT_KNEE_IDX = 14;
+const LEFT_ANKLE_IDX = 15;
+const RIGHT_ANKLE_IDX = 16;
+
+const UNKNOWN_POSTURE = 'unknown posture';
+const SLOUCHING = 'slouching';
+const SITTING_STRAIGHT = 'sitting straight';
+const STANDING = 'standing';
+
+let standing = null;
+let currPosture = UNKNOWN_POSTURE;
+
 let model, webcam, ctx, labelContainer, maxPredictions;
 
 async function initializePostureDetection() {
@@ -55,7 +100,6 @@ async function predict() {
         const prob = prediction[i].probability.toFixed(2);
         if (label == 'slouch' && isFirstPrediction && (prob > 0.95)){
             isSlouch = true;
-            postureChanged();
             isFirstPrediction = false;
         }
 
@@ -64,27 +108,55 @@ async function predict() {
             const newIsSlouch = (label === "slouch" && prob > 0.95);
             if (newIsSlouch != isSlouch){
                 isSlouch = newIsSlouch;
-                postureChanged();
             }
-        }
+        }      
 
         const classPrediction =
             label + ": " + prob;
         labelContainer.childNodes[i].innerHTML = classPrediction;
     }
+    standing = isStanding(pose);
+    if (standing) {
+        postureChanged(STANDING);  
+    } else if (isSlouch) {
+        postureChanged(SLOUCHING);  
+    } else {
+        postureChanged(SITTING_STRAIGHT);  
+    }
 
     // finally draw the poses
     drawPose(pose);
 }
-function postureChanged(){
-    console.log(`posture changed to ${isSlouch}`);
-    document.body.dispatchEvent(new CustomEvent("postureChanged",{detail: {isSlouch: isSlouch}}));
+    
+function postureChanged(newPosture){
+    if (newPosture == currPosture) {
+        return;
+    }
+    document.body.dispatchEvent(new CustomEvent("postureChanged",{detail: {newPosture: newPosture}}));    
+    console.log(`posture changed to ${newPosture} from ${currPosture}`);
+    currPosture = newPosture;
+    Speak(`posture changed to ${currPosture}`);
     // notifyMe();
+}
+
+function updateStanding(newStanding) {
+    if (newStanding != standing) {
+        if (newStanding) {
+            console.log('User stands up');
+        } else {
+            console.log('User sit down');
+        }
+        standing = newStanding;
+    }
+}
+
+function isStanding(pose) {
+    const threshold = 0.95;
+    return pose.keypoints[RIGHT_ELBOW_IDX].score >= threshold || pose.keypoints[RIGHT_ELBOW_IDX].score >= threshold;
 }
 
 function drawPose(pose) {
     if (webcam.canvas) {
-
         ctx.drawImage(webcam.canvas, 0, 0);
         // draw the keypoints and skeleton
         if (pose) {
