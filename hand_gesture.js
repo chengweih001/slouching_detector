@@ -41,6 +41,8 @@ if (hasGetUserMedia()) {
 else {
     console.warn("getUserMedia() is not supported by your browser");
 }
+
+let timer = Date.now();
 // Enable the live webcam view and start detection.
 function enableCam(event) {
     if (!gestureRecognizer) {
@@ -105,6 +107,12 @@ async function predictWebcam() {
         const categoryName = results.gestures[0][0].categoryName;
         if (categoryName == "Open_Palm"){
             console.log("open palm detected");
+            let now = Date.now();
+            console.log(now-timer);
+            if (now - timer > 1000){
+                Speak("Hi");
+            }
+            timer = now;
         }
         console.log(results.gestures);
         const categoryScore = parseFloat(results.gestures[0][0].score * 100).toFixed(2);
