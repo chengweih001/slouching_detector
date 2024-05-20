@@ -10,6 +10,9 @@ async function writeLinesToSerialPort(port, lines) {
     await writableStreamClosed;
 }
 
+
+
+
 async function runPythonOnRobot(port, code) {
     const CTRL_D = '\x04';  // Ctrl+D character
     const CTRL_E = '\x05';  // Ctrl+E character
@@ -132,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const danceButton = document.getElementById('btn-dance');
-    danceButton.onclick = () => {
+    danceButton.onclick = async () => {
         console.log('dance');
         if (window.robotSerialPort) {
             await dance(window.robotSerialPort, 3000, 500);
