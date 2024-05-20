@@ -1,9 +1,11 @@
 <div>Slouch detection Model</div>
 <button type="button" onclick="init()">Start</button>
+<button type="button" onclick="requestSerialPort()">Connect</button>
 <div><canvas id="canvas"></canvas></div>
 <div id="label-container"></div>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+<script src="device_driver/serial.js"></script>
 <script type="text/javascript">
     // More API functions here:
     // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
