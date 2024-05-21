@@ -47,4 +47,8 @@ class VirtualRobot {
     async mildAlert(volume) {
         console.log('[virtual robot] mildAlert');
     }
+
+    async writeMessage(message) {
+        console.log('[virtual robot] writeMessage');
+    }
 }

@@ -26,6 +26,7 @@ class RobotCoach {
 
         this.port_ = port;
         this.danceMode_ = null;
+        this.queue_ = [];
     }
 
     async initPython() {
@@ -33,11 +34,16 @@ class RobotCoach {
             const CTRL_C = '\x03';  // Ctrl+C character
             await writeLinesToSerialPort(this.port_, [CTRL_C]);
             await this.runPythonOnRobot([
-                'from hub import sound, port',
-                'import motor, time'
+                'from hub import sound, port, light_matrix',
+                'import motor, time',
+                'light_matrix.write("ON", 100, 750)'
             ].join('\n'));
+
             await this.resetMotors();
-            document.dispatchEvent(new Event("robotInitDone"));
+            // Give ourselves 2 seconds to reset motors
+            setTimeout(() => {
+                document.dispatchEvent(new Event("robotInitDone"));
+            }, 2000);
         } catch (error) {
             document.dispatchEvent(new Event("robotInitFailed"));
         }
@@ -49,23 +55,32 @@ class RobotCoach {
     }
 
     async runPythonOnRobot(code) {
-        const CTRL_D = '\x04';  // Ctrl+D character
-        const CTRL_E = '\x05';  // Ctrl+E character
-        console.log(`RUN:\n${code}`)
-        await writeLinesToSerialPort(this.port_, [CTRL_E, code, CTRL_D]);
+        this.queue_.push(code);
+        if (this.port_.writable.locked) {
+            return;
+        }
+        while (this.queue_.length > 0) {
+            code = this.queue_.shift();
+            const CTRL_D = '\x04';  // Ctrl+D character
+            const CTRL_E = '\x05';  // Ctrl+E character
+            console.log(`RUN:\n${code}`)
+            await writeLinesToSerialPort(this.port_, [CTRL_E, code, CTRL_D]);
+        }
     }
 
     async resetMotors() {
         await this.runPythonOnRobot([
-            `motor.stop(${this.danceMotor_})`,
-            `d = (${this.standAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
+            `d = motor.absolute_position(${this.danceMotor_})`,
+            `d = (${this.standAngle_} - d) % 360`,
             'if d > 180:',
             '  d -= 360',
+            `motor.stop(${this.danceMotor_})`,
             `motor.run_for_degrees(${this.danceMotor_}, d, 100)`,
-            `motor.stop(${this.waveMotor_})`,
-            `d = (${this.waveMotorIdle_} - motor.absolute_position(${this.waveMotor_})) % 360`,
+            `d = motor.absolute_position(${this.waveMotor_})`,
+            `d = (${this.waveMotorIdle_} - d) % 360`,
             `if d > 180:`,
             '  d -= 360',
+            `motor.stop(${this.waveMotor_})`,
             `motor.run_for_degrees(${this.waveMotor_}, d, 100)`
         ].join('\n'));
     }
@@ -136,5 +151,8 @@ class RobotCoach {
             'time.sleep_ms(100)',
         ].join('\n'));
     }
-}
 
+    async writeMessage(message) {
+        await this.runPythonOnRobot(`light_matrix.write("${message}", 100, 750)`);
+    }
+}

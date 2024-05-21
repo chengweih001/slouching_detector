@@ -50,6 +50,10 @@ class RobotManager {
     async mildAlert(volume) {
         this.robots.map(robot => robot.mildAlert(volume));
     }
+
+    async writeMessage(message) {
+        this.robots.map(robot => robot.writeMessage(message));
+    }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -126,41 +130,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.robotCoach.startDancing();
         }
     };
-
-    const stopDanceButton = document.getElementById('btn-stop-dance');
-    stopDanceButton.onclick = async () => {
-        console.log('RobotCoach is stopping');
-        if (window.robotCoach) {
-            const coach = window.robotCoach;
-            window.robotCoach.stopDancing();
-        }
-    };
-
-    const danceFasterButton = document.getElementById('btn-dance-faster');
-    danceFasterButton.onclick = async () => {
-        console.log('RobotCoach is dancing faster');
-        if (window.robotCoach) {
-            const coach = window.robotCoach;
-            window.robotCoach.danceFaster();
-        }
-    };
-
-    const danceSlowerButton = document.getElementById('btn-dance-slower');
-    danceSlowerButton.onclick = async () => {
-        console.log('RobotCoach is dancing slower');
-        if (window.robotCoach) {
-            const coach = window.robotCoach;
-            window.robotCoach.danceSlower();
-        }
-    };
-
-    const beepButton = document.getElementById('btn-beep');
-    beepButton.onclick = async () => {
-        console.log('beep');
-        if (window.robotCoach) {
-            window.robotCoach.mildAlert(25);
-        }
-    };
 });
 
 document.addEventListener('postureChanged', event => {
@@ -203,5 +172,11 @@ window.addEventListener('HeySpike', event => {
         if (event.detail.action === 'stop') {
             window.robotCoach.stopDancing();
         }
+    }
+});
+window.addEventListener('openPalm', async () => {
+    if (window.robotCoach) {
+        await window.robotCoach.writeMessage('HI');
+        await window.robotCoach.wave(360);
     }
 });

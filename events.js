@@ -80,9 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener(
         "robotInitDone",
-        (e) => {
+        async (e) => {
             Speak("Hi, I'm your posture coach, I'll detect your slouching!");
-            window.robotCoach.wave(90);
+            await window.robotCoach.wave(360);
         },
         false,
     )

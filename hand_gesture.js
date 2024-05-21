@@ -99,6 +99,7 @@ async function predictWebcam() {
             console.log(now-timer);
             if (now - timer > 1000){
                 Speak("Hi");
+                window.dispatchEvent(new Event('openPalm'));
             }
             timer = now;
         }
