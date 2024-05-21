@@ -85,6 +85,25 @@ class RobotCoach {
             `motor.stop(${this.waveMotor_})`,
         ].join('\n'));
     }
+
+    async beep(frequency, duration, volume) {
+        await this.runPythonOnRobot([
+            'from hub import sound',
+            `sound.beep(${frequency}, ${duration}, ${volume})`,
+        ].join('\n'));
+    }
+
+    async mildAlert(volume) {
+        await this.runPythonOnRobot([
+            'from hub import sound',
+            `sound.beep(1046, 100, ${volume})`,  // C6
+            'time.sleep_ms(100)',
+            `sound.beep(880, 100, ${volume})`,  // A5
+            'time.sleep_ms(100)',
+            `sound.beep(1319, 100, ${volume})`,  // E6
+            'time.sleep_ms(100)',
+        ].join('\n'));
+    }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -159,4 +178,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(() => { coach.resetMotors(); }, 3000);
         }
     };
+
+    const beepButton = document.getElementById('btn-beep');
+    beepButton.onclick = async () => {
+        console.log('beep');
+        if (window.robotCoach) {
+            window.robotCoach.mildAlert(25);
+        }
+    };
+});
+
+document.addEventListener('postureChanged', event => {
+    console.log('got postureChanged');
+    if (window.robotCoach) {
+        if (event.detail.newPosture === 'slouching') {
+            window.robotCoach.slouch();
+        } else {
+            window.robotCoach.stand();
+        }
+    }
+});
+document.addEventListener('slouchStage1', () => {
+    console.log('got slouchStage1');
+    if (window.robotCoach) {
+        window.robotCoach.mildAlert(25);
+    }
+});
+document.addEventListener('slouchStage2', () => {
+    console.log('got slouchStage2');
+    if (window.robotCoach) {
+        window.robotCoach.wave(360);
+    }
+});
+document.addEventListener('robotDance', () => {
+    console.log('got robotDance');
+    if (window.robotCoach) {
+        window.robotCoach.dance(3000);
+    }
 });

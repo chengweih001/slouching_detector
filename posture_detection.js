@@ -132,7 +132,7 @@ function postureChanged(newPosture){
     if (newPosture == currPosture) {
         return;
     }
-    document.body.dispatchEvent(new CustomEvent("postureChanged",{detail: {newPosture: newPosture}}));    
+    document.dispatchEvent(new CustomEvent("postureChanged",{detail: {newPosture: newPosture}}));
     console.log(`posture changed to ${newPosture} from ${currPosture}`);
     currPosture = newPosture;
     // notifyMe();

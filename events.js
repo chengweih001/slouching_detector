@@ -11,7 +11,7 @@ const State = Object.freeze({
 });
 let curStage = State.NOT_SLOUCHING; // not slouching;
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.addEventListener(
+    document.addEventListener(
         "postureChanged",
         (e) => {
             if (e.detail.newPosture == SLOUCHING){
@@ -19,13 +19,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 curStage = State.SLOUCH_STARTED;
 
                 stage1TimeoutId = setTimeout(() => {
-                    document.body.dispatchEvent(new Event("slouchStage1"));
+                    document.dispatchEvent(new Event("slouchStage1"));
                 }, 2000);
                 stage2TimeoutId = setTimeout(() => {
-                    document.body.dispatchEvent(new Event("slouchStage2"));
+                    document.dispatchEvent(new Event("slouchStage2"));
                 }, 6000);
                 stage3TimeoutId = setTimeout(() => {
-                    document.body.dispatchEvent(new Event("slouchStage3"));
+                    document.dispatchEvent(new Event("slouchStage3"));
                 }, 10000);
             } else {
                 Speak("Good!");
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     );
 
-    document.body.addEventListener(
+    document.addEventListener(
         "slouchStage1",
         (e) => {
             Speak("stage 1 - beep beep")
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     );
 
-    document.body.addEventListener(
+    document.addEventListener(
         "slouchStage2",
         (e) => {
             Speak("stage 2 - please sit up straight!");
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     );
 
-    document.body.addEventListener(
+    document.addEventListener(
         "slouchStage3",
         (e) => {
             Speak("stage 3 - stand up and dance with me!");
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     );
 
-    document.body.addEventListener(
+    document.addEventListener(
         "robotDance",
         (e) => {
             Speak("robot is dancing");
