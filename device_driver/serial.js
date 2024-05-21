@@ -24,9 +24,14 @@ class RobotCoach {
     }
 
     async init() {
-        const CTRL_C = '\x03';  // Ctrl+C character
-        await writeLinesToSerialPort(this.port_, [CTRL_C]);
-        await this.resetMotors();
+        try {
+            const CTRL_C = '\x03';  // Ctrl+C character
+            await writeLinesToSerialPort(this.port_, [CTRL_C]);
+            await this.resetMotors();
+            document.dispatchEvent(new Event("robotInitDone"));
+        } catch (error) {
+            document.dispatchEvent(new Event("robotInitFailed"));
+        }
     }
 
     async close() {

@@ -78,4 +78,22 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     )
 
+    document.addEventListener(
+        "robotInitDone",
+        (e) => {
+            Speak("Hi, I'm your posture coach, I'll detect your slouching!");
+            window.robotCoach.wave(90);
+        },
+        false,
+    )
+
+    document.addEventListener(
+        "robotInitFailed",
+        (e) => {
+            Speak("Failed to initialize the robot!");
+        },
+        false,
+    )    
+
+
 });
