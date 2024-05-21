@@ -12,10 +12,12 @@ class VirtualRobot {
 
     async slouch() {
         console.log('[virtual robot] slouch');
+        vRobotMoveDown();
     }
 
     async stand() {
         console.log('[virtual robot] stand');
+        vRobotMoveUp();
     }
 
     async wave(degrees) {

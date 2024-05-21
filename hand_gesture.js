@@ -102,7 +102,6 @@ async function predictWebcam() {
             }
             timer = now;
         }
-        console.log(results.gestures);
         const categoryScore = parseFloat(results.gestures[0][0].score * 100).toFixed(2);
         const handedness = results.handednesses[0][0].displayName;
         gestureOutput.innerText = `GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`;

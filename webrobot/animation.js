@@ -10,30 +10,30 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     eye = document.querySelector('#eye-1')
     eye2 = document.querySelector('#eye-2')
-    sleep();
+    vRobotSleep();
 });
-const moveDown = () => {
+const vRobotMoveDown = () => {
     gsap.to([body, head, arms, legs, hips], 0.3, {y: '20px', yoyo: false, repeat: 0});
-    sleep();
+    vRobotSleep();
 }
 
-const moveUp = () => {
+const vRobotMoveUp = () => {
     gsap.to([body, head, arms, legs, hips], 0.3, {y: '0px', yoyo: false, repeat: 0});
-    wake();
+    vRobotWake();
 
 }
-const blink = () => {
+const vRobotBlink = () => {
     gsap.to([eye, eye2], 0.2, { scaleY: 0, yoyo: true, repeat: 1, transformOrigin: 'center'})
 } 
 
-const sleep = () => {
+const vRobotSleep = () => {
     const eye = document.querySelector('#eye-1')
     const eye2 = document.querySelector('#eye-2')
     
     gsap.to([eye, eye2], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
   }
   
-const wake = () => {
+const vRobotWake = () => {
     const eye = document.querySelector('#eye-1')
     const eye2 = document.querySelector('#eye-2')
 
