@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const danceButton = document.getElementById('btn-dance');
-    danceButton.onclick = async () => {
+    danceButton.onclick = () => {
         console.log('RobotCoach is dancing');
         if (window.robotCoach) {
             const coach = window.robotCoach;
@@ -154,12 +154,6 @@ document.addEventListener('slouchStage2', () => {
         window.robotCoach.wave(360);
     }
 });
-document.addEventListener('robotDance', () => {
-    console.log('RobotCoach got robotDance');
-    if (window.robotCoach) {
-        window.robotCoach.dance(3000);
-    }
-});
 window.addEventListener('HeySpike', event => {
     console.log(`RobotCoach got HeySpike with action ${event.detail.action}`);
     if (window.robotCoach) {
@@ -174,9 +168,9 @@ window.addEventListener('HeySpike', event => {
         }
     }
 });
-window.addEventListener('openPalm', async () => {
+window.addEventListener('openPalm', () => {
     if (window.robotCoach) {
-        await window.robotCoach.writeMessage('HI');
-        await window.robotCoach.wave(360);
+        window.robotCoach.writeMessage('HI');
+        window.robotCoach.wave(360);
     }
 });

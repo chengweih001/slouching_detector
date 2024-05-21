@@ -2,53 +2,53 @@ class VirtualRobot {
     constructor() {
     }
 
-    async close() {
+    close() {
         console.log('[virtual robot] close');
     }
 
-    async resetMotors() {
+    resetMotors() {
         console.log('[virtual robot] resetMotors');
     }
 
-    async slouch() {
+    slouch() {
         console.log('[virtual robot] slouch');
         vRobotMoveDown();
     }
 
-    async stand() {
+    stand() {
         console.log('[virtual robot] stand');
         vRobotMoveUp();
     }
 
-    async wave(degrees) {
+    wave(degrees) {
         console.log('[virtual robot] wave');
     }
 
-    async startDancing() {
+    startDancing() {
         console.log('[virtual robot] startDancing');
     }
 
-    async stopDancing() {
+    stopDancing() {
         console.log('[virtual robot] stopDancing');
     }
 
-    async danceFaster() {
+    danceFaster() {
         console.log('[virtual robot] danceFaster');
     }
 
-    async danceSlower() {
+    danceSlower() {
         console.log('[virtual robot] danceSlower');
     }
 
-    async beep(frequency, duration, volume) {
+    beep(frequency, duration, volume) {
         console.log('[virtual robot] beep');
     }
 
-    async mildAlert(volume) {
+    mildAlert(volume) {
         console.log('[virtual robot] mildAlert');
     }
 
-    async writeMessage(message) {
+    writeMessage(message) {
         console.log('[virtual robot] writeMessage');
     }
 }

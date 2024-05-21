@@ -68,8 +68,8 @@ class RobotCoach {
         }
     }
 
-    async resetMotors() {
-        await this.runPythonOnRobot([
+    resetMotors() {
+        this.runPythonOnRobot([
             `d = motor.absolute_position(${this.danceMotor_})`,
             `d = (${this.standAngle_} - d) % 360`,
             'if d > 180:',
@@ -85,8 +85,8 @@ class RobotCoach {
         ].join('\n'));
     }
 
-    async slouch() {
-        await this.runPythonOnRobot([
+    slouch() {
+        this.runPythonOnRobot([
             `d = (${this.slouchAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
             'if d > 180:',
             '  d -= 360',
@@ -94,8 +94,8 @@ class RobotCoach {
         ].join('\n'));
     }
 
-    async stand() {
-        await this.runPythonOnRobot([
+    stand() {
+        this.runPythonOnRobot([
             `d = (${this.standAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
             'if d > 180:',
             '  d -= 360',
@@ -103,12 +103,12 @@ class RobotCoach {
         ].join('\n'));
     }
 
-    async wave(degrees) {
-        await this.runPythonOnRobot(`motor.run_for_degrees(${this.waveMotor_}, ${degrees}, ${this.waveSpeed_})`);
+    wave(degrees) {
+        this.runPythonOnRobot(`motor.run_for_degrees(${this.waveMotor_}, ${degrees}, ${this.waveSpeed_})`);
     }
 
-    async startDancing() {
-        await this.runPythonOnRobot([
+    startDancing() {
+        this.runPythonOnRobot([
             `motor.run(${this.danceMotor_}, ${this.danceSpeed_ / 2})`,
             `motor.run(${this.waveMotor_}, ${this.danceSpeed_})`,
         ].join('\n'));
@@ -116,33 +116,33 @@ class RobotCoach {
         console.log(`dance speed is ${this.danceSpeed_}`);
     }
 
-    async stopDancing() {
+    stopDancing() {
         if (this.danceMode_) {
             this.danceMode_ = false;
-            await this.resetMotors();
+            this.resetMotors();
         }
     }
 
-    async danceFaster() {
+    danceFaster() {
         if (this.danceMode_) {
             this.danceSpeed_ = Math.min(this.danceSpeed_ + 50, this.maxDanceSpeed_);
-            await this.startDancing();
+            this.startDancing();
         }
     }
 
-    async danceSlower() {
+    danceSlower() {
         if (this.danceMode_) {
             this.danceSpeed_ = Math.max(this.danceSpeed_ - 50, this.minDanceSpeed_);
-            await this.startDancing();
+            this.startDancing();
         }
     }
 
-    async beep(frequency, duration, volume) {
-        await this.runPythonOnRobot(`sound.beep(${frequency}, ${duration}, ${volume})`);
+    beep(frequency, duration, volume) {
+        this.runPythonOnRobot(`sound.beep(${frequency}, ${duration}, ${volume})`);
     }
 
-    async mildAlert(volume) {
-        await this.runPythonOnRobot([
+    mildAlert(volume) {
+        this.runPythonOnRobot([
             `sound.beep(1046, 100, ${volume})`,  // C6
             'time.sleep_ms(100)',
             `sound.beep(880, 100, ${volume})`,  // A5
@@ -152,7 +152,7 @@ class RobotCoach {
         ].join('\n'));
     }
 
-    async writeMessage(message) {
-        await this.runPythonOnRobot(`light_matrix.write("${message}", 100, 750)`);
+    writeMessage(message) {
+        this.runPythonOnRobot(`light_matrix.write("${message}", 100, 750)`);
     }
 }
