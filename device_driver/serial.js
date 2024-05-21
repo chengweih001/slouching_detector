@@ -25,8 +25,12 @@ class RobotCoach {
         this.waveSpeed_ = 700;
 
         this.port_ = port;
-        this.danceMode_ = null;
+        this.danceMode_ = false;
         this.queue_ = [];
+
+        this.blinkIntervalId_ = null;
+        this.lastBlink_ = Date.now();
+        this.inverted_ = false;
     }
 
     async initPython() {
@@ -39,7 +43,7 @@ class RobotCoach {
                 'light_matrix.write("ON", 100, 750)'
             ].join('\n'));
 
-            await this.resetMotors();
+            this.resetMotors();
             // Give ourselves 2 seconds to reset motors
             setTimeout(() => {
                 document.dispatchEvent(new Event("robotInitDone"));
@@ -114,11 +118,28 @@ class RobotCoach {
         ].join('\n'));
         this.danceMode_ = true;
         console.log(`dance speed is ${this.danceSpeed_}`);
+        if (this.blinkIntervalId_) {
+            cancelInterval(this.blinkIntervalId_);
+        }
+        this.blinkIntervalId_ = setInterval(() => {
+            const now = Date.now();
+            const elapsed = now - this.lastBlink_;
+            if (elapsed > 300000 / this.danceSpeed_) {
+                if (this.inverted_) {
+                    this.showLightMatrixImage(1);
+                } else {
+                    this.showLightMatrixImage(2);
+                }
+                this.inverted_ = !this.inverted_;
+                this.lastBlink_ = now;
+            }
+        }, 100);
     }
 
     stopDancing() {
         if (this.danceMode_) {
             this.danceMode_ = false;
+            this.clearLightMatrix();
             this.resetMotors();
         }
     }
@@ -154,5 +175,20 @@ class RobotCoach {
 
     writeMessage(message) {
         this.runPythonOnRobot(`light_matrix.write("${message}", 100, 750)`);
+    }
+
+    clearLightMatrix() {
+        this.runPythonOnRobot(`light_matrix.clear()`);
+    }
+
+    updateLightMatrixBlink() {
+        this.runPythonOnRobot([
+            `d = motor.absolute_position(${this.danceMotor_}) % 360`,
+            'light_matrix.show_image(d < 180 ? 1 : 2)'
+        ].join('\n'));
+    }
+
+    showLightMatrixImage(pictogramKey) {
+        this.runPythonOnRobot(`light_matrix.show_image(${pictogramKey})`);
     }
 }
