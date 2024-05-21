@@ -1,5 +1,4 @@
 import { GestureRecognizer, FilesetResolver, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
-const demosSection = document.getElementById("demos");
 let gestureRecognizer;
 let runningMode = "IMAGE";
 let enableWebcamButton;
@@ -18,10 +17,9 @@ const createGestureRecognizer = async () => {
         },
         runningMode: runningMode
     });
-    demosSection.classList.remove("invisible");
 };
 createGestureRecognizer();
-    /********************************************************************
+/********************************************************************
 // Demo 2: Continuously grab image from webcam stream and detect it.
 ********************************************************************/
 const video = document.getElementById("webcam");
@@ -34,29 +32,18 @@ function hasGetUserMedia() {
 }
 // If webcam supported, add event listener to button for when user
 // wants to activate it.
-if (hasGetUserMedia()) {
-    enableWebcamButton = document.getElementById("webcamButton");
-    enableWebcamButton.addEventListener("click", enableCam);
-}
-else {
+if (!hasGetUserMedia()) {
     console.warn("getUserMedia() is not supported by your browser");
 }
 
 let timer = Date.now();
 // Enable the live webcam view and start detection.
-function enableCam(event) {
+export function enableCam() {
     if (!gestureRecognizer) {
         alert("Please wait for gestureRecognizer to load");
         return;
     }
-    if (webcamRunning === true) {
-        webcamRunning = false;
-        enableWebcamButton.innerText = "ENABLE PREDICTIONS";
-    }
-    else {
-        webcamRunning = true;
-        enableWebcamButton.innerText = "DISABLE PREDICTIONS";
-    }
+    webcamRunning = true;
     // getUsermedia parameters.
     const constraints = {
         video: true
@@ -67,6 +54,7 @@ function enableCam(event) {
         video.addEventListener("loadeddata", predictWebcam);
     });
 }
+window.enableCam = enableCam;
 let lastVideoTime = -1;
 let results = undefined;
 async function predictWebcam() {

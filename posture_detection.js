@@ -150,6 +150,9 @@ function updateStanding(newStanding) {
 }
 
 function isStanding(pose) {
+    if (!pose){
+        return;
+    }
     const threshold = 0.95;
     return pose.keypoints[RIGHT_ELBOW_IDX].score >= threshold || pose.keypoints[RIGHT_ELBOW_IDX].score >= threshold;
 }
