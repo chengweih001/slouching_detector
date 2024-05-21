@@ -35,6 +35,7 @@
             }
             #web-robot {
                 text-align: center;
+                position:relative;
             }
             #controls {
                 padding-top: 0.5em;
@@ -104,11 +105,12 @@
                 </g>
             </g>
             </svg>
+            <div id="controls">
+                <button type="button" onclick="initializeAll()">Start</button>
+                <button type="button" id="btn-connect">Connect</button>    
+            </div>
         </div>
-        <div id="controls">
-            <button type="button" onclick="initializeAll()">Start</button>
-            <button type="button" id="btn-connect">Connect</button>    
-        </div>
+
         
         <section id="debug" >
             <div>debugging</div>
