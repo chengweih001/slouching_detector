@@ -135,7 +135,6 @@ function postureChanged(newPosture){
     document.body.dispatchEvent(new CustomEvent("postureChanged",{detail: {newPosture: newPosture}}));    
     console.log(`posture changed to ${newPosture} from ${currPosture}`);
     currPosture = newPosture;
-    Speak(`posture changed to ${currPosture}`);
     // notifyMe();
 }
 
