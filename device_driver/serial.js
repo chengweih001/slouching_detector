@@ -6,7 +6,9 @@ async function writeLinesToSerialPort(port, lines) {
         writer.write(line);
     }
     writer.close();
+    console.log('wait for writableStreamClosed');
     await writableStreamClosed;
+    console.log('writableStreamClosed');
 }
 
 class RobotCoach {
@@ -15,18 +17,25 @@ class RobotCoach {
         this.slouchAngle_ = 60;
         this.standAngle_ = 180;
         this.danceSpeed_ = 500;
+        this.maxDanceSpeed_ = 1000;
+        this.minDanceSpeed_ = 100;
 
         this.waveMotor_ = 'port.D';
         this.waveMotorIdle_ = 180;
         this.waveSpeed_ = 700;
 
         this.port_ = port;
+        this.danceMode_ = null;
     }
 
-    async init() {
+    async initPython() {
         try {
             const CTRL_C = '\x03';  // Ctrl+C character
             await writeLinesToSerialPort(this.port_, [CTRL_C]);
+            await this.runPythonOnRobot([
+                'from hub import sound, port',
+                'import motor, time'
+            ].join('\n'));
             await this.resetMotors();
             document.dispatchEvent(new Event("robotInitDone"));
         } catch (error) {
@@ -48,10 +57,12 @@ class RobotCoach {
 
     async resetMotors() {
         await this.runPythonOnRobot([
+            `motor.stop(${this.danceMotor_})`,
             `d = (${this.standAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
             'if d > 180:',
             '  d -= 360',
             `motor.run_for_degrees(${this.danceMotor_}, d, 100)`,
+            `motor.stop(${this.waveMotor_})`,
             `d = (${this.waveMotorIdle_} - motor.absolute_position(${this.waveMotor_})) % 360`,
             `if d > 180:`,
             '  d -= 360',
@@ -81,26 +92,42 @@ class RobotCoach {
         await this.runPythonOnRobot(`motor.run_for_degrees(${this.waveMotor_}, ${degrees}, ${this.waveSpeed_})`);
     }
 
-    async dance(duration) {
+    async startDancing() {
         await this.runPythonOnRobot([
             `motor.run(${this.danceMotor_}, ${this.danceSpeed_ / 2})`,
             `motor.run(${this.waveMotor_}, ${this.danceSpeed_})`,
-            `time.sleep_ms(${duration})`,
-            `motor.stop(${this.danceMotor_})`,
-            `motor.stop(${this.waveMotor_})`,
         ].join('\n'));
+        this.danceMode_ = true;
+        console.log(`dance speed is ${this.danceSpeed_}`);
+    }
+
+    async stopDancing() {
+        if (this.danceMode_) {
+            this.danceMode_ = false;
+            await this.resetMotors();
+        }
+    }
+
+    async danceFaster() {
+        if (this.danceMode_) {
+            this.danceSpeed_ = Math.min(this.danceSpeed_ + 50, this.maxDanceSpeed_);
+            await this.startDancing();
+        }
+    }
+
+    async danceSlower() {
+        if (this.danceMode_) {
+            this.danceSpeed_ = Math.max(this.danceSpeed_ - 50, this.minDanceSpeed_);
+            await this.startDancing();
+        }
     }
 
     async beep(frequency, duration, volume) {
-        await this.runPythonOnRobot([
-            'from hub import sound',
-            `sound.beep(${frequency}, ${duration}, ${volume})`,
-        ].join('\n'));
+        await this.runPythonOnRobot(`sound.beep(${frequency}, ${duration}, ${volume})`);
     }
 
     async mildAlert(volume) {
         await this.runPythonOnRobot([
-            'from hub import sound',
             `sound.beep(1046, 100, ${volume})`,  // C6
             'time.sleep_ms(100)',
             `sound.beep(880, 100, ${volume})`,  // A5
@@ -134,7 +161,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             await window.robotSerialPort.close();
         }
         window.robotCoach = new RobotCoach(port);
-        window.robotCoach.init();
+        console.log('Initializing RobotCoach');
+        await window.robotCoach.initPython();
     };
 
     const ports = await navigator.serial.getPorts();
@@ -152,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const slouchButton = document.getElementById('btn-slouch');
     slouchButton.onclick = () => {
-        console.log('slouch');
+        console.log('RobotCoach is slouching');
         if (window.robotCoach) {
             window.robotCoach.slouch();
         }
@@ -160,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const standButton = document.getElementById('btn-stand');
     standButton.onclick = () => {
-        console.log('stand');
+        console.log('RobotCoach is standing');
         if (window.robotCoach) {
             window.robotCoach.stand();
         }
@@ -168,7 +196,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const waveButton = document.getElementById('btn-wave');
     waveButton.onclick = () => {
-        console.log('wave');
+        console.log('RobotCoach is waving');
         if (window.robotCoach) {
             window.robotCoach.wave(360);
         }
@@ -176,11 +204,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const danceButton = document.getElementById('btn-dance');
     danceButton.onclick = async () => {
-        console.log('dance');
+        console.log('RobotCoach is dancing');
         if (window.robotCoach) {
             const coach = window.robotCoach;
-            await coach.dance(3000);
-            setTimeout(() => { coach.resetMotors(); }, 3000);
+            window.robotCoach.startDancing();
+        }
+    };
+
+    const stopDanceButton = document.getElementById('btn-stop-dance');
+    stopDanceButton.onclick = async () => {
+        console.log('RobotCoach is stopping');
+        if (window.robotCoach) {
+            const coach = window.robotCoach;
+            window.robotCoach.stopDancing();
+        }
+    };
+
+    const danceFasterButton = document.getElementById('btn-dance-faster');
+    danceFasterButton.onclick = async () => {
+        console.log('RobotCoach is dancing faster');
+        if (window.robotCoach) {
+            const coach = window.robotCoach;
+            window.robotCoach.danceFaster();
+        }
+    };
+
+    const danceSlowerButton = document.getElementById('btn-dance-slower');
+    danceSlowerButton.onclick = async () => {
+        console.log('RobotCoach is dancing slower');
+        if (window.robotCoach) {
+            const coach = window.robotCoach;
+            window.robotCoach.danceSlower();
         }
     };
 
@@ -194,7 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 document.addEventListener('postureChanged', event => {
-    console.log('got postureChanged');
+    console.log(`RobotCoach got postureChanged with newPosture ${event.detail.newPosture}`);
     if (window.robotCoach) {
         if (event.detail.newPosture === 'slouching') {
             window.robotCoach.slouch();
@@ -204,20 +258,34 @@ document.addEventListener('postureChanged', event => {
     }
 });
 document.addEventListener('slouchStage1', () => {
-    console.log('got slouchStage1');
+    console.log('RobotCoach got slouchStage1');
     if (window.robotCoach) {
         window.robotCoach.mildAlert(25);
     }
 });
 document.addEventListener('slouchStage2', () => {
-    console.log('got slouchStage2');
+    console.log('RobotCoach got slouchStage2');
     if (window.robotCoach) {
         window.robotCoach.wave(360);
     }
 });
 document.addEventListener('robotDance', () => {
-    console.log('got robotDance');
+    console.log('RobotCoach got robotDance');
     if (window.robotCoach) {
         window.robotCoach.dance(3000);
+    }
+});
+window.addEventListener('HeySpike', event => {
+    console.log(`RobotCoach got HeySpike with action ${event.detail.action}`);
+    if (window.robotCoach) {
+        if (event.detail.action === 'faster') {
+            window.robotCoach.danceFaster();
+        }
+        if (event.detail.action === 'slower') {
+            window.robotCoach.danceSlower();
+        }
+        if (event.detail.action === 'stop') {
+            window.robotCoach.stopDancing();
+        }
     }
 });
