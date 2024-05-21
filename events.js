@@ -70,6 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
         (e) => {
             Speak("robot is dancing");
             curStage = State.DANCING;
+
+            // Play dance music.
+            const audioElement = document.getElementById('song');
+            audioElement.play();
         },
         false,
     )
