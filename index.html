@@ -99,6 +99,7 @@
                 // Start voice recognition.
                 initializeSpeechRecognition();
                 enableCam();
+                vRobotWake().then(vRobotBlink);
                 const demosSection = document.getElementById("demos");
                 demosSection.classList.remove("invisible");
             }

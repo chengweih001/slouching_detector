@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "postureChanged",
         (e) => {
             if (e.detail.newPosture == SLOUCHING){
-                //Speak("No Slouching");
                 curStage = State.SLOUCH_STARTED;
 
                 stage1TimeoutId = setTimeout(() => {
