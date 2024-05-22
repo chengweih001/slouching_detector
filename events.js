@@ -1,6 +1,7 @@
 let stage1TimeoutId;
 let stage2TimeoutId;
 let stage3TimeoutId;
+let prompStandingIntervalId;
 const State = Object.freeze({
     INITIALIZING: Symbol("initializing"),
     NOT_SLOUCHING: Symbol("not slouching"),
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "postureChanged",
         (e) => {
+            // TODO: not handle posture change during dancing.
             if (e.detail.newPosture == SLOUCHING){
                 curStage = State.SLOUCH_STARTED;
 
@@ -38,6 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.dispatchEvent(new Event("slouchStage3"));
                 }, 15000);
             } else {
+                clearInterval(prompStandingIntervalId);                
+                if (curStage == State.STANDUP_NOTICE && e.detail.newPosture == STANDING) {
+                    document.dispatchEvent(new Event("robotDance"));
+                    return;
+                } 
                 // When in initializing state we don't do anything when posture change.
                 // In stage3 we already about to start dance sequence so ignoring to posture change for now.
                 if(curStage == State.INITIALIZING || curStage == State.STANDUP_NOTICE){
@@ -51,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(curStage == State.SLOUCH_STARTED || curStage == State.VOICE_NOTICE){
                     Speak("awesome");
                 }
-                curStage = State. NOT_SLOUCHING;
+                curStage = State.NOT_SLOUCHING;
             }
         },
         false,
@@ -78,7 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "slouchStage3",
         (e) => {
-            Speak("stage3");
+            prompStandingIntervalId = setInterval(() => {
+                Speak("stage3");
+            }, 5000);
             curStage = State.STANDUP_NOTICE;
         },
         false,

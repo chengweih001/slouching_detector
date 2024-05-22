@@ -142,12 +142,11 @@ document.addEventListener('slouchStage2', () => {
     }
 });
 
-document.addEventListener('slouchStage3', () => {
-    console.log('RobotCoach got slouchStage3');
+document.addEventListener('robotDance', () => {
+    console.log('RobotCoach got robotDance');
     if (window.robotCoach) {
         window.robotCoach.startDancing();
     }
-    document.dispatchEvent(new Event("robotDance"));
 });
 
 window.addEventListener('HeySpiky', event => {
