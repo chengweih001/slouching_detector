@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "postureChanged",
         (e) => {
             if (e.detail.newPosture == SLOUCHING){
-                Speak("No Slouching");
+                //Speak("No Slouching");
                 curStage = State.SLOUCH_STARTED;
 
                 stage1TimeoutId = setTimeout(() => {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.dispatchEvent(new Event("slouchStage3"));
                 }, 10000);
             } else {
-                Speak("Good!");
+                Speak("awesome");
                 curStage = State.NOT_SLOUCHING;
                 clearTimeout(stage1TimeoutId);
                 clearTimeout(stage2TimeoutId);
@@ -41,8 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "slouchStage1",
         (e) => {
-            Speak("stage 1 - beep beep")
-            curStage = State.SOFT_NOTICE;
+            Speak("stage1")
         },
         false,
     );
@@ -50,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "slouchStage2",
         (e) => {
-            Speak("stage 2 - please sit up straight!");
+            Speak("stage2");
             curStage = State.VOICE_NOTICE;
     },
         false,
@@ -59,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "slouchStage3",
         (e) => {
-            Speak("stage 3 - stand up and dance with me!");
+            Speak("stage3");
             curStage = State.STANDUP_NOTICE;
         },
         false,
@@ -68,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "robotDance",
         (e) => {
-            Speak("robot is dancing");
+            Speak("robotDance");
             curStage = State.DANCING;
 
             // Play dance music.
@@ -81,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "robotInitDone",
         async (e) => {
-            Speak("Hi, I'm your posture coach, I'll detect your slouching!");
+            Speak("hi");
             await window.robotCoach.wave(360);
         },
         false,
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "robotInitFailed",
         (e) => {
-            Speak("Failed to initialize the robot!");
+            Speak("oops");
         },
         false,
     )    
