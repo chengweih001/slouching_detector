@@ -154,8 +154,8 @@ document.addEventListener('slouchStage2', () => {
         window.robotCoach.wave(360);
     }
 });
-window.addEventListener('HeySpike', event => {
-    console.log(`RobotCoach got HeySpike with action ${event.detail.action}`);
+window.addEventListener('HeySpiky', event => {
+    console.log(`RobotCoach got HeySpiky with action ${event.detail.action}`);
     if (window.robotCoach) {
         if (event.detail.action === 'faster') {
             window.robotCoach.danceFaster();

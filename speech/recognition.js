@@ -38,7 +38,7 @@ function initializeSpeechRecognition() {
                     if (transcript.includes(keyword)) {
                         console.log('Keyword detected in stage 2:', keyword);
                         // Fire event to window instance
-                        window.dispatchEvent(new CustomEvent('HeySpike', {detail:{ action: keyword }}));
+                        window.dispatchEvent(new CustomEvent('HeySpiky', {detail:{ action: keyword }}));
                         console.log('Returning to stage 1...');
                         stage = 1; // Return to stage 1
                         clearTimeout(timeoutId); // Cancel timeout

@@ -106,5 +106,26 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     )    
 
-
+    window.addEventListener('HeySpiky', event => {
+        console.log(`Recognize HeySpiky with action ${event.detail.action}`);
+        const audioElement = document.getElementById('song');
+        if (curStage == State.DANCING && !audioElement.paused ) {
+            console.log(`We are in dancing stage and voice recognition triggered.`);
+            if (event.detail.action === 'faster') {
+                if(audioElement.playbackRate + 0.2 <= 3) {
+                    audioElement.playbackRate += 0.2;
+                }
+            }
+            if (event.detail.action === 'slower') {
+                if(audioElement.playbackRate - 0.2 >= 0.2) {
+                    audioElement.playbackRate -= 0.2;
+                }
+            }
+            if (event.detail.action === 'stop') {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                curStage = State.NOT_SLOUCHING;
+            }
+        }
+    });
 });
