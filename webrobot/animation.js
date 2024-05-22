@@ -1,8 +1,14 @@
 
-let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm;
+let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, robotImage;
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    const robotImage = document.querySelector('#robot-img'); 
+    robotImage = document.querySelector('#robot-img'); 
+    vRobotInit();
+    // In case the svg is not loaded, initiate again after it's loaded.
+    robotImage.addEventListener("load", vRobotInit);
+});
+
+const vRobotInit = () => {
     body = robotImage.contentDocument.querySelector('#body')
     head = robotImage.contentDocument.querySelector('#head')
     arms = robotImage.contentDocument.querySelector('#arms')
@@ -13,8 +19,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     eye =  robotImage.contentDocument.querySelector('#eye-1')
     eye2 =  robotImage.contentDocument.querySelector('#eye-2')
-    vRobotSleep();        
-});
+    vRobotSleep(); 
+}
+
 const vRobotMoveDown = async () => {
     await gsap.to([body, head, arms, legs, hips], 0.3, {y: '20px', yoyo: false, repeat: 0});
     return vRobotSleep();

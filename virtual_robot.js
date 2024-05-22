@@ -22,6 +22,7 @@ class VirtualRobot {
 
     wave(degrees) {
         console.log('[virtual robot] wave');
+        vRobotWave();
     }
 
     startDancing() {
