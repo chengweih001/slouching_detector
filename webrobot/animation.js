@@ -18,7 +18,6 @@ const vRobotInit = () => {
     hips = robotImage.contentDocument.querySelector('#hips')
 
     eye =  robotImage.contentDocument.querySelector('#eye-1')
-    eye2 =  robotImage.contentDocument.querySelector('#eye-2')
     vRobotSleep(); 
 }
 
@@ -33,15 +32,15 @@ const vRobotMoveUp = async () => {
 
 }
 const vRobotBlink = async () => {
-    return gsap.to([eye, eye2], 0.2, { scaleY: 0, yoyo: true, repeat: 1, transformOrigin: 'center'})
+    return gsap.to([eye], 0.2, { scaleY: 0, yoyo: true, repeat: 1, transformOrigin: 'center'})
 } 
 
 const vRobotSleep = async () => {
-    return gsap.to([eye, eye2], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
+    return gsap.to([eye], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
   }
   
 const vRobotWake = async () => {
-    return gsap.to([eye, eye2], 0.2, { scaleY: 1, yoyo: false, repeat: 0, transformOrigin: 'center'})
+    return gsap.to([eye], 0.2, { scaleY: 1, yoyo: false, repeat: 0, transformOrigin: 'center'})
 }
 
 const vRobotWave = async () => {
