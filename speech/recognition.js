@@ -9,7 +9,7 @@ function initializeSpeechRecognition() {
     let timeoutId; // Timer ID for the timeout
 
     // Keywords for each stage
-    const stage1Keywords = ['hey spike', 'hello spike', 'hi spike'];
+    const stage1Keywords = ['hey sparky', 'hello sparky', 'hi sparky'];
     const stage2Keywords = ['faster', 'slower', 'stop'];
 
     // Event listener for speech recognition result
