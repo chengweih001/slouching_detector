@@ -1,8 +1,7 @@
 
-let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, robotImage;
+let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, rightArm, rightPalm, robotImage;
 let heartRotateControl = null;
 let heartBlinkControl = null;
-
 document.addEventListener("DOMContentLoaded", (event) => {
     robotImage = document.querySelector('#robot-img'); 
     vRobotInit();
@@ -16,6 +15,8 @@ const vRobotInit = () => {
     arms = robotImage.contentDocument.querySelector('#arms')
     leftArm = robotImage.contentDocument.querySelector("#left-arm");
     leftPalm = robotImage.contentDocument.querySelector("#left-palm");
+    rightArm = robotImage.contentDocument.querySelector("#right-arm");
+    rightPalm = robotImage.contentDocument.querySelector("#right-palm");
     legs = robotImage.contentDocument.querySelector('#legs')
     hips = robotImage.contentDocument.querySelector('#hips')
 
@@ -70,8 +71,8 @@ const vRobotWake = async () => {
 }
 
 const vRobotWave = async () => {
-    const newPath = 'M 34.804 138.278 L 34.804 123.622 C 30.943 122.942 27.346 121.188 24.411 118.556 C 21.686 116.001 19.566 112.853 18.213 109.348 C 16.404 104.909 15.525 99.975 15.167 95.31 C 14.723 89.014 15.014 82.687 16.032 76.46 L 0.404 76.46 C -0.261 85.22 -0.061 92.732 0.813 99.188 C 1.78 106.464 3.566 112.383 5.83 117.199 C 10.359 126.827 16.804 132.053 22.463 134.89 C 29.187 138.278 34.804 138.278 34.804 138.278 Z';
-    const originalPath = 'M34.7945411,124 L34.7945411,138.655783 C30.9343023,139.336321 27.3364427,141.090142 24.4021377,143.721688 C21.6765099,146.277381 19.5574202,149.42552 18.2038944,152.929855 C16.3951047,157.369002 15.516284,162.302958 15.158246,166.968304 C14.7141944,173.264205 15.0044906,179.591215 16.0231171,185.818185 L0.394988307,185.818185 C-0.269939518,177.057703 -0.0699961863,169.546025 0.80417466,163.089941 C1.77134241,155.813887 3.55688286,149.895024 5.82135734,145.07888 C10.3503063,135.451303 16.7949914,130.225173 22.4538526,127.388266 C29.1775284,124 34.7945411,124 34.7945411,124 Z';
+    const newPath = 'M 40 130 c -30,0 -30, -20 -30, -60';
+    const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
     gsap.to(leftArm, 0.2, {attr: {d: newPath}, repeat:0});
     await gsap.to(leftPalm, 0.2, { x: '-3px', y: "-134px", repeat:0, rotation: 180, transformOrigin: "center"});
     await gsap.to(leftPalm, 0.1, {rotation: 200, transformOrigin:"top"});
@@ -91,3 +92,35 @@ const vRobotHeartBlink = async (blink) => {
         gsap.set(heart, { opacity:1});        
     }
 }
+const vRobotDance = async () => {
+    const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
+    const newPath = 'M 40 130 c -50, 20 -70, -10 -70, -10';
+    const newPath2 = 'M 40 130 c -50, -20 -70, 10 -70, 10';
+
+    const rightOriginalPath = 'M 130 130 c 30,0 30, 20 30, 60';
+    const rightNewPath = 'M 130 130 c 50, 20, 70, -10 70, -10';
+    const rightNewPath2 = 'M 130 130 c 50, -20 70, 10 70, 10';
+    for (let i = 0; i< 5; i++){
+        gsap.to(leftPalm, 0.1, {x: '-24px', y:'-70px'})
+        gsap.to(leftPalm, 0.1, {rotation: 145})
+        gsap.to(leftArm, 0.1, {attr: {d: newPath}, repeat:0});
+        gsap.to(rightPalm, 0.1, {x: '50px', y:'-50px'})
+        gsap.to(rightPalm, 0.1, {rotation: -145})
+        await gsap.to(rightArm, 0.1, {attr: {d: rightNewPath}, repeat:0});
+
+        gsap.to(leftPalm, 0.1, {x: '-35px', y:'-50px'})
+        gsap.to(leftPalm, 0.1, {rotation: 50})
+        gsap.to(leftArm, 0.1, {attr: {d: newPath2}, repeat:0});
+        gsap.to(rightPalm, 0.1, {x: '45px', y:'-40px'})
+        gsap.to(rightPalm, 0.1, {rotation: -50})
+        await gsap.to(rightArm, 0.1, {attr: {d: rightNewPath2}, repeat:0});
+        
+    }
+    gsap.to(rightPalm, 0.1, {rotation: 0})
+    gsap.to(leftPalm, 0.1, {rotation: 0})
+    gsap.to(leftArm, 0.2, {attr: {d: originalPath}, repeat:0});
+    gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0});
+    gsap.to(rightArm, 0.2, {attr: {d: rightOriginalPath}, repeat:0});
+    return gsap.to(rightPalm, 0.2, { x: '0px', y: "0px", repeat:0});
+}
+  
