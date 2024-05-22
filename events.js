@@ -12,6 +12,15 @@ const State = Object.freeze({
     STANDING: Symbol("user is standing")
 });
 let curStage = State.INITIALIZING;
+
+let songElement = document.getElementById('song');
+songElement.addEventListener('pause', () => {
+    curStage = State.NOT_SLOUCHING;
+});
+songElement.addEventListener('ended', () => {
+    curStage = State.NOT_SLOUCHING;
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "postureChanged",
@@ -81,9 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
             Speak("robotDance");
             curStage = State.DANCING;
 
-            // Play dance music.
-            const audioElement = document.getElementById('song');
-            audioElement.play();
+            // Play dance music.            
+            songElement.play();
         },
         false,
     )
@@ -108,22 +116,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener('HeySpiky', event => {
         console.log(`Recognize HeySpiky with action ${event.detail.action}`);
-        const audioElement = document.getElementById('song');
-        if (curStage == State.DANCING && !audioElement.paused ) {
+        if (curStage == State.DANCING && !songElement.paused ) {
             console.log(`We are in dancing stage and voice recognition triggered.`);
             if (event.detail.action === 'faster') {
-                if(audioElement.playbackRate + 0.2 <= 3) {
-                    audioElement.playbackRate += 0.2;
+                if(songElement.playbackRate + 0.2 <= 3) {
+                    songElement.playbackRate += 0.2;
                 }
             }
             if (event.detail.action === 'slower') {
-                if(audioElement.playbackRate - 0.2 >= 0.2) {
-                    audioElement.playbackRate -= 0.2;
+                if(songElement.playbackRate - 0.2 >= 0.2) {
+                    songElement.playbackRate -= 0.2;
                 }
             }
             if (event.detail.action === 'stop') {
-                audioElement.pause();
-                audioElement.currentTime = 0;
+                songElement.pause();
+                songElement.currentTime = 0;
                 curStage = State.NOT_SLOUCHING;
             }
         }
