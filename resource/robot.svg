@@ -105,13 +105,12 @@
          style="stroke-width:0.944243" /><ellipse
          id="eye-1"
          stroke="#979797"
-         fill="#d8d8d8"
+         fill="white"
          cx="81.415169"
          cy="72.880409"
          rx="17.446598"
          ry="15.102089"
-         style="stroke-width:1.29857" /><g
-         id="antenna" /></g><g
+         style="stroke-width:1.29857" /></g><g
        id="hips"><polygon
          id="polygon10316"
          fill="black"

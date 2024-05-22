@@ -115,20 +115,19 @@ const vRobotDance = async () => {
             gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 -24, 20 24,48"}})
         }
         danceRight = !danceRight;
-        gsap.to(leftPalm, 0.1, {x: '-24px', y:'-70px'})
+        gsap.to(leftPalm, 0.1, {x: '-48px', y:'-80px'})
         gsap.to(leftPalm, 0.1, {rotation: 145})
         gsap.to(leftArm, 0.1, {attr: {d: newPath}, repeat:0});
         gsap.to(rightPalm, 0.1, {x: '50px', y:'-50px'})
         gsap.to(rightPalm, 0.1, {rotation: -145})
         await gsap.to(rightArm, 0.1, {attr: {d: rightNewPath}, repeat:0});
 
-        gsap.to(leftPalm, 0.1, {x: '-35px', y:'-50px'})
+        gsap.to(leftPalm, 0.1, {x: '-50px', y:'-48px'})
         gsap.to(leftPalm, 0.1, {rotation: 50})
         gsap.to(leftArm, 0.1, {attr: {d: newPath2}, repeat:0});
         gsap.to(rightPalm, 0.1, {x: '45px', y:'-40px'})
         gsap.to(rightPalm, 0.1, {rotation: -50})
         await gsap.to(rightArm, 0.1, {attr: {d: rightNewPath2}, repeat:0});
-        
     }
 
     // reset back.
