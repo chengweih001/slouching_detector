@@ -27,6 +27,7 @@ class VirtualRobot {
 
     startDancing() {
         console.log('[virtual robot] startDancing');
+        vRobotDance();
     }
 
     stopDancing() {

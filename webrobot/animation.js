@@ -1,5 +1,5 @@
 
-let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, rightArm, rightPalm, robotImage;
+let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, rightArm, rightPalm, leftLeg, rightLeg, robotImage;
 let heartRotateControl = null;
 let heartBlinkControl = null;
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -18,6 +18,8 @@ const vRobotInit = () => {
     rightArm = robotImage.contentDocument.querySelector("#right-arm");
     rightPalm = robotImage.contentDocument.querySelector("#right-palm");
     legs = robotImage.contentDocument.querySelector('#legs')
+    leftLeg = robotImage.contentDocument.querySelector('#left-leg')
+    rightLeg = robotImage.contentDocument.querySelector('#right-leg')
     hips = robotImage.contentDocument.querySelector('#hips')
 
     eye =  robotImage.contentDocument.querySelector('#eye-1')
@@ -100,7 +102,17 @@ const vRobotDance = async () => {
     const rightOriginalPath = 'M 130 130 c 30,0 30, 20 30, 60';
     const rightNewPath = 'M 130 130 c 50, 20, 70, -10 70, -10';
     const rightNewPath2 = 'M 130 130 c 50, -20 70, 10 70, 10';
+
+    danceRight = true;
     for (let i = 0; i< 5; i++){
+        if (danceRight){
+            gsap.to(leftLeg, 0.2, {attr: {d: "M 65 200 l0,0 24, 20, -24, 48"}})
+            gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 24, 20 -24,48"}})
+        } else {
+            gsap.to(leftLeg, 0.2, {attr: {d: "M 65 200 l0,0 -24, 20, 24, 48"}})
+            gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 -24, 20 24,48"}})
+        }
+        danceRight = !danceRight;
         gsap.to(leftPalm, 0.1, {x: '-24px', y:'-70px'})
         gsap.to(leftPalm, 0.1, {rotation: 145})
         gsap.to(leftArm, 0.1, {attr: {d: newPath}, repeat:0});
@@ -116,6 +128,8 @@ const vRobotDance = async () => {
         await gsap.to(rightArm, 0.1, {attr: {d: rightNewPath2}, repeat:0});
         
     }
+    gsap.to(leftLeg, 0.2, {attr: {d: "M 65 200 l0,0 0, 48"}})
+    gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 0,48"}})
     gsap.to(rightPalm, 0.1, {rotation: 0})
     gsap.to(leftPalm, 0.1, {rotation: 0})
     gsap.to(leftArm, 0.2, {attr: {d: originalPath}, repeat:0});
