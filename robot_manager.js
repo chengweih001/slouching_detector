@@ -56,48 +56,7 @@ class RobotManager {
     }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    window.robotCoach = new RobotManager();
-    window.robotCoach.addRobot(new VirtualRobot());
-
-    const connectSerialPort = async port => {
-        if (port === window.robotSerialPort) {
-            console.log('Port already selected');
-            return;
-        }
-        try {
-            await port.open({ baudRate: 115200 });
-        } catch (error) {
-            console.log('Error opening serial port: ', error);
-            return;
-        }
-        console.log('Opened serial port');
-        if (!port.readable) {
-            console.log('Serial port not readable');
-            return;
-        }
-        if (window.robotSerialPort) {
-            await window.robotSerialPort.close();
-        }
-        let physicalRobot = new RobotCoach(port);
-        console.log('Initializing RobotCoach');
-        await physicalRobot.initPython();
-        window.robotCoach.addRobot(physicalRobot);
-    };
-
-    const ports = await navigator.serial.getPorts();
-    if (ports.length !== 0) {
-        connectSerialPort(ports[0]);
-    }
-
-    const connectButton = document.getElementById('btn-connect');
-    connectButton.onclick = async () => {
-        const port = await navigator.serial.requestPort();
-        if (port) {
-            connectSerialPort(port);
-        }
-    };
-
+window.addEventListener('DOMContentLoaded', () => {
     const slouchButton = document.getElementById('btn-slouch');
     slouchButton.onclick = () => {
         console.log('RobotCoach is slouching');
@@ -130,6 +89,34 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.robotCoach.startDancing();
         }
     };
+});
+
+window.addEventListener('permissionsGranted', async () => {
+    window.robotCoach = new RobotManager();
+    window.robotCoach.addRobot(new VirtualRobot());
+
+    const ports = await navigator.serial.getPorts();
+    if (ports.length === 0) {
+        console.log('No serial ports, continuing without a robot');
+        window.dispatchEvent(new Event('robotInitFailed'));
+        return;
+    }
+    const port = ports[0];
+    try {
+        await port.open({ baudRate: 115200 });
+    } catch (error) {
+        console.log('Error opening serial port: ', error);
+        return;
+    }
+    console.log('Opened serial port');
+    if (!port.readable) {
+        console.log('Serial port not readable');
+        return;
+    }
+    let physicalRobot = new RobotCoach(port);
+    console.log('Initializing RobotCoach');
+    await physicalRobot.initPython();
+    window.robotCoach.addRobot(physicalRobot);
 });
 
 document.addEventListener('postureChanged', event => {

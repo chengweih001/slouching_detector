@@ -36,6 +36,28 @@
             .invisible {
                 display: none;
             }
+            .overlay {
+                position: fixed;
+                background-color: #2b2b3e;
+                width: 100%;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                z-index: 9998;
+                display: block;
+                overflow-y: hidden;
+                overflow-x: hidden;
+            }
+            .center {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .overlay-text {
+                color: white;
+            }
             #web-robot {
                 text-align: center;
                 position:relative;
@@ -62,12 +84,11 @@
     </head>
     <body>
         <h3>Slouch Coach</h3>
+        <div id="interstitial-overlay" class="overlay">
+            <div class="center"><h1 class="overlay-text">Click to start!</h1></div>
+        </div>
         <div id="web-robot">
             <object data="resource/robot.svg" type="image/svg+xml" id="robot-img"></object>
-            <div id="controls">
-                <button type="button" onclick="initializeAll()">Start</button>
-                <button type="button" id="btn-connect">Connect</button>    
-            </div>
         </div>
 
         
@@ -94,7 +115,21 @@
         </section>
         
         <script>
-            function initializeAll(){
+            async function initializeAll(){
+                try {
+                    await navigator.mediaDevices.getUserMedia({video: true});
+                } catch (error) {
+                    console.log('Error requesting camera permission:', error);
+                }
+                const ports = await navigator.serial.getPorts();
+                if (ports.length === 0) {
+                    try {
+                        await navigator.serial.requestPort({ usbVendorId: 0x0694, usbProductId: 0x0009 });
+                    } catch (error) {
+                        console.log('Error requesting serial port permission:', error);
+                    }
+                }
+                window.dispatchEvent(new Event('permissionsGranted'));
                 initializePostureDetection();
                 // Start voice recognition.
                 initializeSpeechRecognition();
@@ -103,6 +138,14 @@
                 const demosSection = document.getElementById("demos");
                 demosSection.classList.remove("invisible");
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const overlayElement = document.getElementById('interstitial-overlay');
+                overlayElement.onclick = async () => {
+                    await initializeAll();
+                    overlayElement.style.display = 'none';
+                };
+            });
         </script>
     </body>
 </html>
