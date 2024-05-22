@@ -1,5 +1,7 @@
 
 let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, robotImage;
+let heartRotateControl = null;
+let heartBlinkControl = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     robotImage = document.querySelector('#robot-img'); 
@@ -18,7 +20,27 @@ const vRobotInit = () => {
     hips = robotImage.contentDocument.querySelector('#hips')
 
     eye =  robotImage.contentDocument.querySelector('#eye-1')
+    heart = robotImage.contentDocument.querySelector('#heart');
+
+    heartRotateControl = gsap.to(heart, { 
+        duration: 0.8,   // Animation time in seconds
+        rotation: 360, // Rotate a full circle,
+        transformOrigin: "50% 50%",  // Rotate around the center,
+        repeat:-1,
+        paused: true,
+    });        
+
+    heartBlinkControl = gsap.to(heart, { 
+        duration: 0.5,     // How long each blink takes
+        opacity: 0,        // Fade out
+        repeat: -1,        // Repeat indefinitely
+        yoyo: true,        // Reverse the animation (fade back in)
+        ease: "power1.inOut", // Smooth easing for a natural blink 
+        paused: true,        
+    });           
+
     vRobotSleep(); 
+    vRobotHeartBlink(false);
 }
 
 const vRobotMoveDown = async () => {
@@ -36,10 +58,14 @@ const vRobotBlink = async () => {
 } 
 
 const vRobotSleep = async () => {
+    heartRotateControl.pause();  
+    vRobotHeartBlink(true);
     return gsap.to([eye], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
   }
   
 const vRobotWake = async () => {
+    heartRotateControl.resume();
+    vRobotHeartBlink(false);
     return gsap.to([eye], 0.2, { scaleY: 1, yoyo: false, repeat: 0, transformOrigin: 'center'})
 }
 
@@ -57,4 +83,11 @@ const vRobotWave = async () => {
     return gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0, rotation: 0, transformOrigin: "center"});
 }
 
-  
+const vRobotHeartBlink = async (blink) => {
+    if (blink) {
+        heartBlinkControl.resume();
+    } else {
+        heartBlinkControl.pause();
+        gsap.set(heart, { opacity:1});        
+    }
+}
