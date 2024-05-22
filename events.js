@@ -2,14 +2,16 @@ let stage1TimeoutId;
 let stage2TimeoutId;
 let stage3TimeoutId;
 const State = Object.freeze({
-    NOT_SLOUCHING:   Symbol("not slouching"),
-    SLOUCH_STARTED:  Symbol("stage 0 - just started slouching"),
+    INITIALIZING: Symbol("initializing"),
+    NOT_SLOUCHING: Symbol("not slouching"),
+    SLOUCH_STARTED: Symbol("stage 0 - just started slouching"),
     SOFT_NOTICE: Symbol("stage 1 - soft notice"),
     VOICE_NOTICE: Symbol("stage 2 - voice warning"),
     STANDUP_NOTICE: Symbol("stage 3 - prompted to stand up and dance"),
     DANCING: Symbol("stage 4 - user is dancing"),
+    STANDING: Symbol("user is standing")
 });
-let curStage = State.NOT_SLOUCHING; // not slouching;
+let curStage = State.INITIALIZING;
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "postureChanged",
@@ -19,19 +21,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 stage1TimeoutId = setTimeout(() => {
                     document.dispatchEvent(new Event("slouchStage1"));
-                }, 2000);
+                }, 5000);
                 stage2TimeoutId = setTimeout(() => {
                     document.dispatchEvent(new Event("slouchStage2"));
-                }, 6000);
+                }, 10000);
                 stage3TimeoutId = setTimeout(() => {
                     document.dispatchEvent(new Event("slouchStage3"));
-                }, 10000);
+                }, 15000);
             } else {
-                Speak("awesome");
-                curStage = State.NOT_SLOUCHING;
+                // When in initializing state we don't do anything when posture change.
+                // In stage3 we already about to start dance sequence so ignoring to posture change for now.
+                if(curStage == State.INITIALIZING || curStage == State.STANDUP_NOTICE){
+                    return;
+                }
                 clearTimeout(stage1TimeoutId);
                 clearTimeout(stage2TimeoutId);
                 clearTimeout(stage3TimeoutId);
+
+                // Only say awesome when user transition from slouch stage 1/2 to not slouching no matter sit straight or stand up.
+                if(curStage == State.SLOUCH_STARTED || curStage == State.VOICE_NOTICE){
+                    Speak("awesome");
+                }
+                curStage = State. NOT_SLOUCHING;
             }
         },
         false,
@@ -40,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "slouchStage1",
         (e) => {
+            curStage = State.SOFT_NOTICE;
             Speak("stage1")
         },
         false,
@@ -48,8 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "slouchStage2",
         (e) => {
-            Speak("stage2");
             curStage = State.VOICE_NOTICE;
+            Speak("stage2");
     },
         false,
     );
@@ -79,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "robotInitDone",
         async (e) => {
+            curStage = State.NOT_SLOUCHING;
             Speak("hi");
             await window.robotCoach.wave(360);
         },

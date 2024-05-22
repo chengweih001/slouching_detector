@@ -3,7 +3,7 @@ function Speak(content) {
     speechSynthesis.speak(utterance);*/
     let file;
     if (content === 'hi') {
-        file = 'resource/hi-i-am-your-posture-coach.mp3'
+        file = 'resource/hi-i-am-sparky.mp3'
     } else if (content === 'stage1') {
         file = 'resource/hey-i-notice-you-are-slouching.mp3';
     } else if (content === 'stage2') {
