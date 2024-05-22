@@ -27,11 +27,12 @@ class VirtualRobot {
 
     startDancing() {
         console.log('[virtual robot] startDancing');
-        vRobotDance();
+        vRobotStartDancing();
     }
 
     stopDancing() {
         console.log('[virtual robot] stopDancing');
+        vRobotStopDancing();
     }
 
     danceFaster() {

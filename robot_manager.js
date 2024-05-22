@@ -154,8 +154,20 @@ document.addEventListener('slouchStage2', () => {
         window.robotCoach.wave(360);
     }
 });
+
+document.addEventListener('slouchStage3', () => {
+    console.log('RobotCoach got slouchStage3');
+    if (window.robotCoach) {
+        window.robotCoach.startDancing();
+    }
+    document.dispatchEvent(new Event("robotDance"));
+});
+
 window.addEventListener('HeySpiky', event => {
-    console.log(`RobotCoach got HeySpiky with action ${event.detail.action}`);
+    console.log(`RobotCoach got HeySpiky with action ${event.detail.action}`)});
+
+window.addEventListener('HeySpike', event => {
+    console.log(`RobotCoach got HeySpike with action ${event.detail.action}`);
     if (window.robotCoach) {
         if (event.detail.action === 'faster') {
             window.robotCoach.danceFaster();
