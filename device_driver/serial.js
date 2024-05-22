@@ -46,10 +46,10 @@ class RobotCoach {
             this.resetMotors();
             // Give ourselves 2 seconds to reset motors
             setTimeout(() => {
-                document.dispatchEvent(new Event("robotInitDone"));
+                window.dispatchEvent(new Event("robotInitDone"));
             }, 2000);
         } catch (error) {
-            document.dispatchEvent(new Event("robotInitFailed"));
+            window.dispatchEvent(new Event("robotInitFailed"));
         }
     }
 

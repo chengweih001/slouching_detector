@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     )
 
-    document.addEventListener(
+    window.addEventListener(
         "robotInitDone",
         async (e) => {
             curStage = State.NOT_SLOUCHING;
@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     )
 
-    document.addEventListener(
+    window.addEventListener(
         "robotInitFailed",
         (e) => {
             Speak("oops");
