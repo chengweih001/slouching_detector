@@ -37,8 +37,6 @@ const vRobotBlink = async () => {
 } 
 
 const vRobotSleep = async () => {
-    console.log(eye);
-    console.log(eye2);
     return gsap.to([eye, eye2], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
   }
   

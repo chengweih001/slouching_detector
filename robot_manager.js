@@ -169,7 +169,6 @@ window.addEventListener('HeySpike', event => {
     }
 });
 window.addEventListener('openPalm', () => {
-    console.log("robot manager palm")
     if (window.robotCoach) {
         window.robotCoach.writeMessage('HI');
         window.robotCoach.wave(360);

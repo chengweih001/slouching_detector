@@ -94,11 +94,8 @@ async function predictWebcam() {
         gestureOutput.style.width = videoWidth;
         const categoryName = results.gestures[0][0].categoryName;
         if (categoryName == "Open_Palm"){
-            console.log("open palm detected");
             let now = Date.now();
-            console.log(now-timer);
             if (now - timer > 1000){
-                Speak("Hi");
                 window.dispatchEvent(new Event('openPalm'));
             }
             timer = now;
