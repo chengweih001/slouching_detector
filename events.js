@@ -99,8 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
             Speak("robotDance");
             curStage = State.DANCING;
 
-            // Play dance music.            
-            songElement.play();
+            // Play dance music after 5 sec.            
+            setTimeout(() => {
+                songElement.play();
+            }, 5000);
         },
         false,
     )
