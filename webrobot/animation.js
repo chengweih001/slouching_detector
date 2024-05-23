@@ -3,6 +3,7 @@ let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, rightArm, rightP
 let heartRotateControl = null;
 let heartBlinkControl = null;
 let robotDanceControl = null;
+let danceSpeed = 0.1;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     robotImage = document.querySelector('#robot-img'); 
@@ -109,31 +110,31 @@ const vRobotDance = async () => {
     danceTime = 0
     while(true){
         // dance for 5 times is for debugging when not in dancing state.
-        if (danceTime >= 5 && curStage!=State.DANCING){
+        if (danceTime >= 50 && curStage!=State.DANCING){
             break;
         }
         danceTime+=1;
         if (danceRight){
-            gsap.to(leftLeg, 0.2, {attr: {d: "M 65 200 l0,0 24, 20, -24, 48"}})
-            gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 24, 20 -24,48"}})
+            gsap.to(leftLeg, danceSpeed*2, {attr: {d: "M 65 200 l0,0 24, 20, -24, 48"}})
+            gsap.to(rightLeg, danceSpeed*2, {attr: {d: "M 102 200 l0,0 24, 20 -24,48"}})
         } else {
-            gsap.to(leftLeg, 0.2, {attr: {d: "M 65 200 l0,0 -24, 20, 24, 48"}})
-            gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 -24, 20 24,48"}})
+            gsap.to(leftLeg, danceSpeed*2, {attr: {d: "M 65 200 l0,0 -24, 20, 24, 48"}})
+            gsap.to(rightLeg, danceSpeed*2, {attr: {d: "M 102 200 l0,0 -24, 20 24,48"}})
         }
         danceRight = !danceRight;
-        gsap.to(leftPalm, 0.1, {x: '-48px', y:'-80px'})
-        gsap.to(leftPalm, 0.1, {rotation: 145})
-        gsap.to(leftArm, 0.1, {attr: {d: newPath}, repeat:0});
-        gsap.to(rightPalm, 0.1, {x: '50px', y:'-50px'})
-        gsap.to(rightPalm, 0.1, {rotation: -145})
-        await gsap.to(rightArm, 0.1, {attr: {d: rightNewPath}, repeat:0});
+        gsap.to(leftPalm, danceSpeed, {x: '-48px', y:'-80px'})
+        gsap.to(leftPalm, danceSpeed, {rotation: 145})
+        gsap.to(leftArm, danceSpeed, {attr: {d: newPath}, repeat:0});
+        gsap.to(rightPalm, danceSpeed, {x: '50px', y:'-50px'})
+        gsap.to(rightPalm, danceSpeed, {rotation: -145})
+        await gsap.to(rightArm, danceSpeed, {attr: {d: rightNewPath}, repeat:0});
 
-        gsap.to(leftPalm, 0.1, {x: '-50px', y:'-48px'})
-        gsap.to(leftPalm, 0.1, {rotation: 50})
-        gsap.to(leftArm, 0.1, {attr: {d: newPath2}, repeat:0});
-        gsap.to(rightPalm, 0.1, {x: '45px', y:'-40px'})
-        gsap.to(rightPalm, 0.1, {rotation: -50})
-        await gsap.to(rightArm, 0.1, {attr: {d: rightNewPath2}, repeat:0});
+        gsap.to(leftPalm, danceSpeed, {x: '-50px', y:'-48px'})
+        gsap.to(leftPalm, danceSpeed, {rotation: 50})
+        gsap.to(leftArm, danceSpeed, {attr: {d: newPath2}, repeat:0});
+        gsap.to(rightPalm, danceSpeed, {x: '45px', y:'-40px'})
+        gsap.to(rightPalm, danceSpeed, {rotation: -50})
+        await gsap.to(rightArm, danceSpeed, {attr: {d: rightNewPath2}, repeat:0});
     }
 
     // reset back.
@@ -169,4 +170,14 @@ const vRobotStartStopDancing = async () => {
     }
     robotDanceControl.pause();
     heartRotateControl.duration(0.8);
+}
+
+
+const vRobotDanceFaster = () => {
+    danceSpeed /= 2;
+}
+
+
+const vRobotDanceSlower = () => {
+    danceSpeed *= 2;
 }

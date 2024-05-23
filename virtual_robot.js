@@ -37,10 +37,12 @@ class VirtualRobot {
 
     danceFaster() {
         console.log('[virtual robot] danceFaster');
+        vRobotDanceFaster();
     }
 
     danceSlower() {
         console.log('[virtual robot] danceSlower');
+        vRobotDanceSlower();
     }
 
     beep(frequency, duration, volume) {
