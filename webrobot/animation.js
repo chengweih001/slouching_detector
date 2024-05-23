@@ -28,7 +28,7 @@ const vRobotInit = () => {
     heart = robotImage.contentDocument.querySelector('#heart');
 
     heartRotateControl = gsap.to(heart, { 
-        duration: 0.8,   // Animation time in seconds
+        duration: 2,   // Animation time in seconds
         rotation: 360, // Rotate a full circle,
         transformOrigin: "50% 50%",  // Rotate around the center,
         repeat:-1,
@@ -106,7 +106,13 @@ const vRobotDance = async () => {
     const rightNewPath2 = 'M 130 130 c 50, -20 70, 10 70, 10';
 
     danceRight = true;
-    for (let i = 0; i< 5; i++){
+    danceTime = 0
+    while(true){
+        // dance for 5 times is for debugging when not in dancing state.
+        if (danceTime >= 5 && curStage!=State.DANCING){
+            break;
+        }
+        danceTime+=1;
         if (danceRight){
             gsap.to(leftLeg, 0.2, {attr: {d: "M 65 200 l0,0 24, 20, -24, 48"}})
             gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 24, 20 -24,48"}})
