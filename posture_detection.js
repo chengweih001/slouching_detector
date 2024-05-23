@@ -105,7 +105,7 @@ async function predict() {
             } else if (label === 'straight'){
                 newPosture = SITTING_STRAIGHT;
             } else if (label === 'standing'){
-                newPosture == STANDING;
+                newPosture = STANDING;
             }
             if (currPosture!==newPosture){
                 postureChanged(newPosture);
