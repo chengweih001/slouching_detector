@@ -2,7 +2,8 @@
 // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
 
 // the link to your model provided by Teachable Machine export panel
-const URL = "https://teachablemachine.withgoogle.com/models/RxJBvWzam/";
+// const URL = "https://teachablemachine.withgoogle.com/models/RxJBvWzam/";
+const URL = "./my-pose-model/";
 
 const NOSE = 'nose';
 const LEFT_EYE = 'leftEye';
@@ -83,12 +84,11 @@ async function loop(timestamp) {
     await predict();
     window.requestAnimationFrame(loop);
 }
-let isSlouch = false;
-let isFirstPrediction = true;
 async function predict() {
     labels = {
         "Class 1": "straight",
-        "Class 2": "slouch"
+        "Class 2": "slouch",
+        "Class 3": "standing",
     }
     // Prediction #1: run input through posenet
     // estimatePose can take in an image, video or canvas html element
@@ -98,30 +98,23 @@ async function predict() {
     for (let i = 0; i < maxPredictions; i++) {
         const label =  labels[prediction[i].className];
         const prob = prediction[i].probability.toFixed(2);
-        if (label == 'slouch' && isFirstPrediction && (prob > 0.95)){
-            isSlouch = true;
-            isFirstPrediction = false;
-        }
-
-        // Only detect posture change when either slouch / straight up confidence is >0.95
-        if (label == 'slouch' && (prob >0.95 || prob < 0.05)){
-            const newIsSlouch = (label === "slouch" && prob > 0.95);
-            if (newIsSlouch != isSlouch){
-                isSlouch = newIsSlouch;
+        if (prob>0.95){
+            let newPosture;
+            if (label ==='slouch'){
+                newPosture = SLOUCHING;
+            } else if (label === 'straight'){
+                newPosture = SITTING_STRAIGHT;
+            } else if (label === 'standing'){
+                newPosture == STANDING;
             }
-        }      
-
+            if (currPosture!==newPosture){
+                postureChanged(newPosture);
+                currPosture = newPosture;
+            }
+        }
         const classPrediction =
             label + ": " + prob;
         labelContainer.childNodes[i].innerHTML = classPrediction;
-    }
-    standing = isStanding(pose);
-    if (standing) {
-        postureChanged(STANDING);  
-    } else if (isSlouch) {
-        postureChanged(SLOUCHING);  
-    } else {
-        postureChanged(SITTING_STRAIGHT);  
     }
 
     // finally draw the poses
@@ -136,25 +129,6 @@ function postureChanged(newPosture){
     console.log(`posture changed to ${newPosture} from ${currPosture}`);
     currPosture = newPosture;
     // notifyMe();
-}
-
-function updateStanding(newStanding) {
-    if (newStanding != standing) {
-        if (newStanding) {
-            console.log('User stands up');
-        } else {
-            console.log('User sit down');
-        }
-        standing = newStanding;
-    }
-}
-
-function isStanding(pose) {
-    if (!pose){
-        return;
-    }
-    const threshold = 0.65;
-    return pose.keypoints[RIGHT_ELBOW_IDX].score >= threshold || pose.keypoints[RIGHT_ELBOW_IDX].score >= threshold;
 }
 
 function drawPose(pose) {
