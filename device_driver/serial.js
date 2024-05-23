@@ -120,7 +120,7 @@ class RobotCoach {
         this.danceMode_ = true;
         console.log(`dance speed is ${this.danceSpeed_}`);
         if (this.blinkIntervalId_) {
-            cancelInterval(this.blinkIntervalId_);
+            clearInterval(this.blinkIntervalId_);
         }
         this.blinkIntervalId_ = setInterval(() => {
             const now = Date.now();

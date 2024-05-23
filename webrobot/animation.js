@@ -167,10 +167,10 @@ const vRobotStopDancing = async () => {
 
 
 const vRobotDanceFaster = () => {
-    danceSpeed /= 2;
+    danceSpeed /= 1.2;
 }
 
 
 const vRobotDanceSlower = () => {
-    danceSpeed *= 2;
+    danceSpeed *= 1.2;
 }
