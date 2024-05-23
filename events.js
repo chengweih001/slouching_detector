@@ -22,6 +22,7 @@ songElement.addEventListener('pause', () => {
 songElement.addEventListener('ended', () => {
     curStage = State.NOT_SLOUCHING;
     window.robotCoach.stopDancing();
+    songElement.playbackRate = 1;
 });
 
 document.addEventListener("DOMContentLoaded", () => {

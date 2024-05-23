@@ -163,6 +163,7 @@ const vRobotStartDancing = async () => {
 
 const vRobotStopDancing = async () => {
     heartRotateControl.duration(2);
+    danceSpeed = 0.1;
 }
 
 
