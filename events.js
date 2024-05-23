@@ -133,7 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "danceScored",
         (e) => {
-            console.log(`got dance score ${e.detail.score}`);
+            let score = e.detail.score;
+            console.log(`got dance score ${score}`);
+            if (score >= 120) {
+                Speak("dance-score-high");
+            } else if (score >= 50) {
+                Speak("dance-score-mid");
+            } else {
+                Speak("dance-score-low");
+            }
         },
         false,
     )

@@ -16,6 +16,12 @@ function Speak(content) {
         file = 'resource/oops.mp3';
     } else if (content === 'awesome') {
         file = 'resource/awesome.mp3';
+    } else if (content === 'dance-score-high') {
+        file = 'resource/dance-score-high.mp3';
+    } else if (content === 'dance-score-mid') {
+        file = 'resource/dance-score-mid.mp3';
+    } else if (content === 'dance-score-low') {
+        file = 'resource/dance-score-low.mp3';
     } else {
         // Can't find any match voice, early return here.
         console.error(`Speak: Can't find match voice for ${content}`);
