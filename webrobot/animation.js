@@ -2,7 +2,6 @@
 let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, rightArm, rightPalm, leftLeg, rightLeg, robotImage;
 let heartRotateControl = null;
 let heartBlinkControl = null;
-let robotDanceControl = null;
 let danceSpeed = 0.1;
 
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -153,23 +152,11 @@ const vRobotDance = async () => {
 const vRobotStartDancing = async () => {
     vRobotMoveUp();
     heartRotateControl.duration(0.1);
-
-    // TODO: alternate movements.
-    // robotDanceControl = gsap.to([body, head, arms, legs, hips], { 
-    //     duration: 2,   // Animation time in seconds
-    //     rotation: 360, // Rotate a full circle,
-    //     transformOrigin: "50% 50%",  // Rotate around the center,
-    //     repeat:-1,
-    // });
     vRobotDance();
 }
 
-const vRobotStartStopDancing = async () => {
-    if (!robotDanceControl) {
-        return;
-    }
-    robotDanceControl.pause();
-    heartRotateControl.duration(0.8);
+const vRobotStopDancing = async () => {
+    heartRotateControl.duration(2);
 }
 
 

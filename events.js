@@ -28,7 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener(
         "postureChanged",
         (e) => {
-            // TODO: not handle posture change during dancing.
+            console.log('[DEBUG]curStage:', curStage);
+            // not handle posture change during dancing.
+            if (curStage == State.DANCING) {
+                return;
+            }
             if (e.detail.newPosture == SLOUCHING){
                 curStage = State.SLOUCH_STARTED;
 
@@ -44,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 clearInterval(prompStandingIntervalId);                
                 if (curStage == State.STANDUP_NOTICE && e.detail.newPosture == STANDING) {
+                    curStage = State.DANCING;
                     document.dispatchEvent(new Event("robotDance"));
                     return;
                 } 
@@ -99,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "robotDance",
         (e) => {
             Speak("robotDance");
-            curStage = State.DANCING;
 
             // Play dance music after 5 sec.            
             setTimeout(() => {
