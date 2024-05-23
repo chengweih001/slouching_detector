@@ -17,9 +17,11 @@ let curStage = State.INITIALIZING;
 let songElement = document.getElementById('song');
 songElement.addEventListener('pause', () => {
     curStage = State.NOT_SLOUCHING;
+    await window.robotCoach.stopDancing();
 });
 songElement.addEventListener('ended', () => {
     curStage = State.NOT_SLOUCHING;
+    await window.robotCoach.stopDancing();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
