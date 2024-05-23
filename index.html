@@ -58,6 +58,13 @@
             .overlay-text {
                 color: white;
             }
+            .container {
+                position: relative;
+                width: fit-content;
+                height: fit-content;
+                left: 50%;
+                transform: translate(-50%, 0);
+            }
             #web-robot {
                 text-align: center;
                 position:relative;
@@ -79,7 +86,9 @@
             #debug div{
                 padding:0.2em;
             }
-            
+            .flip-horizontal {
+                transform: rotateY(180deg);
+            }
         </style>
     </head>
     <body>
@@ -105,9 +114,11 @@
                 <div id="label-container"></div>
                 
                 <div id="liveView" class="videoView">
-                <div style="position: relative;">
+                <div class="container">
+                <div class="flip-horizontal">
                 <video id="webcam" autoplay playsinline></video>
                 <canvas class="output_canvas" id="output_canvas" width="1280" height="720" style="position: absolute; left: 0px; top: 0px;"></canvas>
+                </div>
                 <p id='gesture_output' class="output">
                 </div>
             </div>

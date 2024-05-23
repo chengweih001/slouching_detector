@@ -40,6 +40,7 @@ class RobotCoach {
             await this.runPythonOnRobot([
                 'from hub import sound, port, light_matrix',
                 'import motor, time',
+                'light_matrix.set_orientation(1)',
                 'light_matrix.write("ON", 100, 750)'
             ].join('\n'));
 

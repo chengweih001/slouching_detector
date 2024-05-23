@@ -62,7 +62,7 @@ async function predictWebcam() {
     // Now let's start detecting the stream.
     if (runningMode === "IMAGE") {
         runningMode = "VIDEO";
-        await gestureRecognizer.setOptions({ runningMode: "VIDEO" });
+        await gestureRecognizer.setOptions({ runningMode: "VIDEO", numHands: 10 });
     }
     let nowInMs = Date.now();
     if (video.currentTime !== lastVideoTime) {
@@ -92,17 +92,23 @@ async function predictWebcam() {
     if (results.gestures.length > 0) {
         gestureOutput.style.display = "block";
         gestureOutput.style.width = videoWidth;
-        const categoryName = results.gestures[0][0].categoryName;
-        if (categoryName == "Open_Palm"){
-            let now = Date.now();
-            if (now - timer > 1000){
-                window.dispatchEvent(new Event('openPalm'));
+        const output = [];
+        for (let i = 0; i < results.gestures.length; ++i) {
+            for (let j = 0; j < results.gestures[i].length; ++j) {
+                const categoryName = results.gestures[i][j].categoryName;
+                if (categoryName == "Open_Palm"){
+                    let now = Date.now();
+                    if (now - timer > 1000){
+                        window.dispatchEvent(new Event('openPalm'));
+                    }
+                    timer = now;
+                }
+                const categoryScore = parseFloat(results.gestures[i][j].score * 100).toFixed(2);
+                const handedness = results.handednesses[i][j].displayName;
+                output.push(`GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`);
             }
-            timer = now;
         }
-        const categoryScore = parseFloat(results.gestures[0][0].score * 100).toFixed(2);
-        const handedness = results.handednesses[0][0].displayName;
-        gestureOutput.innerText = `GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`;
+        gestureOutput.innerText = output.join('\n');
     }
     else {
         gestureOutput.style.display = "none";
