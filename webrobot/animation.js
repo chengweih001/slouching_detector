@@ -3,6 +3,7 @@ let body, head, arms, legs, hips, eye, eye2, leftArm, leftPalm, rightArm, rightP
 let heartRotateControl = null;
 let heartBlinkControl = null;
 let danceSpeed = 0.1;
+let vRobotDancing = false;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     robotImage = document.querySelector('#robot-img'); 
@@ -75,6 +76,9 @@ const vRobotWake = async () => {
 }
 
 const vRobotWave = async () => {
+    if (vRobotDancing){
+        return;
+    }
     const newPath = 'M 40 130 c -30,0 -30, -20 -30, -60';
     const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
     gsap.to(leftArm, 0.2, {attr: {d: newPath}, repeat:0});
@@ -97,6 +101,7 @@ const vRobotHeartBlink = async (blink) => {
     }
 }
 const vRobotDance = async () => {
+    vRobotDancing = true;
     const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
     const newPath = 'M 40 130 c -50, 20 -70, -10 -70, -10';
     const newPath2 = 'M 40 130 c -50, -20 -70, 10 -70, 10';
@@ -144,6 +149,7 @@ const vRobotDance = async () => {
     gsap.to(leftArm, 0.2, {attr: {d: originalPath}, repeat:0});
     gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0});
     gsap.to(rightArm, 0.2, {attr: {d: rightOriginalPath}, repeat:0});
+    vRobotDancing = false;
     return gsap.to(rightPalm, 0.2, { x: '0px', y: "0px", repeat:0});
 }
   
