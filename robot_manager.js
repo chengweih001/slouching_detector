@@ -84,10 +84,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const danceButton = document.getElementById('btn-dance');
     danceButton.onclick = () => {
         console.log('RobotCoach is dancing');
-        if (window.robotCoach) {
-            const coach = window.robotCoach;
-            window.robotCoach.startDancing();
-        }
+        curStage = State.DANCING;
+        document.dispatchEvent(new Event("robotDance"));
     };
 });
 
