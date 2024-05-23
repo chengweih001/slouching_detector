@@ -11,6 +11,13 @@ async function writeLinesToSerialPort(port, lines) {
     console.log('writableStreamClosed');
 }
 
+function appendSerialLog(message) {
+    const serialLog = document.getElementById('serial-log');
+    if (serialLog) {
+        serialLog.value += message;
+    }
+}
+
 class RobotCoach {
     constructor(port) {
         this.danceMotor_ = 'port.B';
@@ -31,6 +38,9 @@ class RobotCoach {
         this.blinkIntervalId_ = null;
         this.lastBlink_ = Date.now();
         this.inverted_ = false;
+        this.initialized_ = false;
+
+        this.readSerial();
     }
 
     async initPython() {
@@ -46,17 +56,39 @@ class RobotCoach {
 
             this.resetMotors();
             // Give ourselves 2 seconds to reset motors
-            setTimeout(() => {
-                window.dispatchEvent(new Event("robotInitDone"));
-            }, 2000);
+            if (!this.initialized_) {
+                setTimeout(() => {
+                    window.dispatchEvent(new Event("robotInitDone"));
+                }, 2000);
+            }
         } catch (error) {
-            window.dispatchEvent(new Event("robotInitFailed"));
+            console.log('initPython error:', error);
+            if (!this.initialized_) {
+                window.dispatchEvent(new Event("robotInitFailed"));
+            }
         }
+        this.initialized_ = true;
     }
 
     async close() {
         await this.port_.close();
         this.port_ = null;
+    }
+
+    async readSerial() {
+        while (this.port_ && this.port_.readable && !this.port_.readable.locked) {
+            const reader = this.port_.readable.getReader();
+            let result = null;
+            try {
+                result = await reader.read();
+            } finally {
+                reader.releaseLock();
+            }
+            if (result !== null) {
+                const decoder = new TextDecoder();
+                appendSerialLog(decoder.decode(result.value));
+            }
+        }
     }
 
     async runPythonOnRobot(code) {
@@ -74,6 +106,7 @@ class RobotCoach {
     }
 
     resetMotors() {
+        this.danceMode_ = false;
         this.runPythonOnRobot([
             `d = motor.absolute_position(${this.danceMotor_})`,
             `d = (${this.standAngle_} - d) % 360`,
@@ -91,25 +124,31 @@ class RobotCoach {
     }
 
     slouch() {
-        this.runPythonOnRobot([
-            `d = (${this.slouchAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
-            'if d > 180:',
-            '  d -= 360',
-            `motor.run_for_degrees(${this.danceMotor_}, d, 500)`
-        ].join('\n'));
+        if (!this.danceMode_) {
+            this.runPythonOnRobot([
+                `d = (${this.slouchAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
+                'if d > 180:',
+                '  d -= 360',
+                `motor.run_for_degrees(${this.danceMotor_}, d, 500)`
+            ].join('\n'));
+        }
     }
 
     stand() {
-        this.runPythonOnRobot([
-            `d = (${this.standAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
-            'if d > 180:',
-            '  d -= 360',
-            `motor.run_for_degrees(${this.danceMotor_}, d, 500)`
-        ].join('\n'));
+        if (!this.danceMode_) {
+            this.runPythonOnRobot([
+                `d = (${this.standAngle_} - motor.absolute_position(${this.danceMotor_})) % 360`,
+                'if d > 180:',
+                '  d -= 360',
+                `motor.run_for_degrees(${this.danceMotor_}, d, 500)`
+            ].join('\n'));
+        }
     }
 
     wave(degrees) {
-        this.runPythonOnRobot(`motor.run_for_degrees(${this.waveMotor_}, ${degrees}, ${this.waveSpeed_})`);
+        if (!this.danceMode_) {
+            this.runPythonOnRobot(`motor.run_for_degrees(${this.waveMotor_}, ${degrees}, ${this.waveSpeed_})`);
+        }
     }
 
     startDancing() {
@@ -142,6 +181,7 @@ class RobotCoach {
             this.danceMode_ = false;
             this.clearLightMatrix();
             this.resetMotors();
+            this.initPython();
         }
     }
 
@@ -160,36 +200,39 @@ class RobotCoach {
     }
 
     beep(frequency, duration, volume) {
-        this.runPythonOnRobot(`sound.beep(${frequency}, ${duration}, ${volume})`);
+        if (!this.danceMode_) {
+            this.runPythonOnRobot(`sound.beep(${frequency}, ${duration}, ${volume})`);
+        }
     }
 
     mildAlert(volume) {
-        this.runPythonOnRobot([
-            `sound.beep(1046, 100, ${volume})`,  // C6
-            'time.sleep_ms(100)',
-            `sound.beep(880, 100, ${volume})`,  // A5
-            'time.sleep_ms(100)',
-            `sound.beep(1319, 100, ${volume})`,  // E6
-            'time.sleep_ms(100)',
-        ].join('\n'));
+        if (!this.danceMode_) {
+            this.runPythonOnRobot([
+                `sound.beep(1046, 100, ${volume})`,  // C6
+                'time.sleep_ms(100)',
+                `sound.beep(880, 100, ${volume})`,  // A5
+                'time.sleep_ms(100)',
+                `sound.beep(1319, 100, ${volume})`,  // E6
+                'time.sleep_ms(100)',
+            ].join('\n'));
+        }
     }
 
     writeMessage(message) {
-        this.runPythonOnRobot(`light_matrix.write("${message}", 100, 750)`);
+        if (!this.danceMode_) {
+            this.runPythonOnRobot(`light_matrix.write("${message}", 100, 750)`);
+        }
     }
 
     clearLightMatrix() {
-        this.runPythonOnRobot(`light_matrix.clear()`);
-    }
-
-    updateLightMatrixBlink() {
-        this.runPythonOnRobot([
-            `d = motor.absolute_position(${this.danceMotor_}) % 360`,
-            'light_matrix.show_image(d < 180 ? 1 : 2)'
-        ].join('\n'));
+        if (!this.danceMode_) {
+            this.runPythonOnRobot(`light_matrix.clear()`);
+        }
     }
 
     showLightMatrixImage(pictogramKey) {
-        this.runPythonOnRobot(`light_matrix.show_image(${pictogramKey})`);
+        if (this.danceMode_) {
+            this.runPythonOnRobot(`light_matrix.show_image(${pictogramKey})`);
+        }
     }
 }
