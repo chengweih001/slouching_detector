@@ -1,5 +1,6 @@
 import { GestureRecognizer, FilesetResolver, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
 let gestureRecognizer;
+let lastKnowncategoryName = 'None';
 let runningMode = "IMAGE";
 let enableWebcamButton;
 let webcamRunning = false;
@@ -96,16 +97,24 @@ async function predictWebcam() {
         for (let i = 0; i < results.gestures.length; ++i) {
             for (let j = 0; j < results.gestures[i].length; ++j) {
                 const categoryName = results.gestures[i][j].categoryName;
-                if (categoryName == "Open_Palm"){
-                    let now = Date.now();
-                    if (now - timer > 1000){
-                        window.dispatchEvent(new Event('openPalm'));
-                    }
-                    timer = now;
-                }
                 const categoryScore = parseFloat(results.gestures[i][j].score * 100).toFixed(2);
                 const handedness = results.handednesses[i][j].displayName;
                 output.push(`GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`);
+
+                if (categoryName != 'None') {
+                    let now = Date.now();
+                    if (lastKnowncategoryName != categoryName) {
+                        timer = now;                        
+                    } else {
+                        // This would send event every 1s when user keeps the same gesture.
+                        if (now - timer > 1000) {
+                            window.dispatchEvent(new CustomEvent('Gesture', {detail:{ categoryName: categoryName }}));
+                            timer = now;
+                        }
+                    }
+                    
+                }
+                lastKnowncategoryName = categoryName;
             }
         }
         gestureOutput.innerText = output.join('\n');

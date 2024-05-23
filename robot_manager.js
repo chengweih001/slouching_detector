@@ -164,9 +164,25 @@ window.addEventListener('HeySpike', event => {
         }
     }
 });
-window.addEventListener('openPalm', () => {
-    if (window.robotCoach) {
-        window.robotCoach.writeMessage('HI');
-        window.robotCoach.wave(360);
-    }
-});
+
+window.addEventListener(
+    "Gesture",
+    (e) => {
+        console.log(e);
+        if (e.detail.categoryName == "Open_Palm"){
+            if (window.robotCoach) {
+                window.robotCoach.writeMessage('HI');
+                window.robotCoach.wave(360);
+            }
+        } else if (e.detail.categoryName == "Thumb_Up"){
+            if (window.robotCoach) {
+                window.robotCoach.danceFaster();
+            }
+        } else if (e.detail.categoryName == "Thumb_Down"){
+            if (window.robotCoach) {
+                window.robotCoach.danceSlower();
+            }
+        }
+    },
+    false,
+)

@@ -152,4 +152,23 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+
+    window.addEventListener(
+        "Gesture",
+        (e) => {
+            if (curStage != State.DANCING || songElement.paused ) {            
+                return;
+            }
+            if (e.detail.categoryName == "Thumb_Up"){
+                if(songElement.playbackRate + 0.2 <= 3) {
+                    songElement.playbackRate += 0.2;
+                }
+            } else if (e.detail.categoryName == "Thumb_Down"){
+                if(songElement.playbackRate - 0.2 >= 0.2) {
+                    songElement.playbackRate -= 0.2;
+                }
+            }
+        },
+        false,
+    )    
 });
