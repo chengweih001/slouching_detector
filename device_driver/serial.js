@@ -6,9 +6,7 @@ async function writeLinesToSerialPort(port, lines) {
         writer.write(line);
     }
     writer.close();
-    console.log('wait for writableStreamClosed');
     await writableStreamClosed;
-    console.log('writableStreamClosed');
 }
 
 function appendSerialLog(message) {
