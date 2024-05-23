@@ -106,8 +106,14 @@ async function predictWebcam() {
                     if (lastKnowncategoryName != categoryName) {
                         timer = now;                        
                     } else {
-                        // This would send event every 1s when user keeps the same gesture.
-                        if (now - timer > 1000) {
+                        let threshold;
+                        if (categoryName == 'Open_Palm') {
+                            threshold = 1000;
+                        } else {
+                            threshold = 200;
+                        }
+                        // This would send event every `threshold` when user keeps the same gesture.
+                        if (now - timer > threshold) {
                             window.dispatchEvent(new CustomEvent('Gesture', {detail:{ categoryName: categoryName }}));
                             timer = now;
                         }
