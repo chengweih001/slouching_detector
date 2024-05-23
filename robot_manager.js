@@ -148,9 +148,6 @@ document.addEventListener('robotDance', () => {
 });
 
 window.addEventListener('HeySpiky', event => {
-    console.log(`RobotCoach got HeySpiky with action ${event.detail.action}`)});
-
-window.addEventListener('HeySpike', event => {
     console.log(`RobotCoach got HeySpike with action ${event.detail.action}`);
     if (window.robotCoach) {
         if (event.detail.action === 'faster') {
@@ -161,6 +158,11 @@ window.addEventListener('HeySpike', event => {
         }
         if (event.detail.action === 'stop') {
             window.robotCoach.stopDancing();
+        }
+        if (event.detail.action === 'dance') {
+            console.log('RobotCoach is dancing');
+            curStage = State.DANCING;
+            document.dispatchEvent(new Event("robotDance"));
         }
     }
 });

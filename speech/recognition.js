@@ -10,7 +10,7 @@ function initializeSpeechRecognition() {
 
     // Keywords for each stage
     const stage1Keywords = ['hey sparky', 'hello sparky', 'hi sparky'];
-    const stage2Keywords = ['faster', 'slower', 'stop'];
+    const stage2Keywords = ['faster', 'slower', 'stop', 'dance'];
 
     // Event listener for speech recognition result
     recognition.onresult = function (event) {

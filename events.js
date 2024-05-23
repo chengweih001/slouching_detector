@@ -106,6 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
         (e) => {
             Speak("robotDance");
 
+            // Clear all timers when robot is dancing since they are not handled by
+            // posture change event.
+            clearInterval(prompStandingIntervalId);            
+            clearTimeout(stage1TimeoutId);
+            clearTimeout(stage2TimeoutId);
+            clearTimeout(stage3TimeoutId);
+
             // Play dance music after 5 sec.            
             setTimeout(() => {
                 songElement.play();
