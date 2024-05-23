@@ -135,10 +135,21 @@
         
         <script>
             async function initializeAll(){
-                try {
-                    await navigator.mediaDevices.getUserMedia({video: true});
-                } catch (error) {
-                    console.log('Error requesting camera permission:', error);
+                let constraints = {video: true, audio: true};
+                while (true) {
+                    try {
+                        await navigator.mediaDevices.getUserMedia(constraints);
+                    } catch (error) {
+                        if ('audio' in constraints &&
+                                error instanceof DOMException &&
+                                error.name === 'NotFoundError') {
+                            // Retry with video only.
+                            constraints = {video: true};
+                            continue;
+                        }
+                        console.log('Error requesting webcam permissions:', error);
+                    }
+                    break;
                 }
                 const ports = await navigator.serial.getPorts();
                 if (ports.length === 0) {
