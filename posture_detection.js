@@ -117,6 +117,10 @@ async function predict() {
         labelContainer.childNodes[i].innerHTML = classPrediction;
     }
 
+    if (curStage == State.DANCING){
+        updateDanceScore(pose);
+    }
+
     // finally draw the poses
     drawPose(pose);
 }
@@ -141,4 +145,37 @@ function drawPose(pose) {
             tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
         }
     }
+}
+
+let danceScore = 0;
+let prevPosition = {leftElbow: null, rightElbow:null}
+let danceScoreTimer;
+function updateDanceScore(pose){
+    if (!danceScoreTimer){
+        danceScoreTimer = Date.now();
+    }
+    if (pose){
+        for (let position of pose.keypoints){
+            const part = position.part;
+            if (part === 'leftElbow' || part==='rightElbow'){
+                if (position.score > 0.8) {
+                    if (prevPosition[part]){
+                        danceScore += Math.abs((position.position.x-prevPosition[part].x)*(position.position.y-prevPosition[part].y));
+                    }
+                    prevPosition[part] = position.position;
+                } else {
+                    prevPosition[part] = null;
+                }
+            }
+        }
+    }
+}
+
+function getDanceScore(){
+    let score = danceScore / (Date.now() - danceScoreTimer)*100;
+    console.log(danceScore);
+    console.log(score);
+    danceScoreTimer = null;
+    danceScore = 0;
+    document.dispatchEvent(new CustomEvent("danceScored",{detail: {score: score}}));
 }

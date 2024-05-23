@@ -17,12 +17,12 @@ let curStage = State.INITIALIZING;
 let songElement = document.getElementById('song');
 songElement.addEventListener('pause', () => {
     curStage = State.NOT_SLOUCHING;
-    window.robotCoach.stopDancing();
+    document.dispatchEvent(new Event("robotDanceStop"));
 });
 songElement.addEventListener('ended', () => {
     curStage = State.NOT_SLOUCHING;
-    window.robotCoach.stopDancing();
     songElement.playbackRate = 1;
+    document.dispatchEvent(new Event("robotDanceStop"));
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -117,6 +117,23 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 songElement.play();
             }, 5000);
+        },
+        false,
+    );
+
+    document.addEventListener(
+        "robotDanceStop",
+        (e) => {
+            window.robotCoach.stopDancing();
+            getDanceScore();
+        },
+        false,
+    )
+
+    document.addEventListener(
+        "danceScored",
+        (e) => {
+            console.log(`got dance score ${e.detail.score}`);
         },
         false,
     )
