@@ -24,13 +24,13 @@ function Speak(content) {
         console.log('Say "Awesome"');
         file = 'resource/awesome.mp3';
     } else if (content === 'dance-score-high') {
-        console.log('Say "Wow, you\'re like a dancing tornado of awesome!"')''
+        console.log('Say "Wow, you\'re like a dancing tornado of awesome!"');
         file = 'resource/dance-score-high.mp3';
     } else if (content === 'dance-score-mid') {
-        console.log('Say "Hmm, not bad"')''
+        console.log('Say "Hmm, not bad"');
         file = 'resource/dance-score-mid.mp3';
     } else if (content === 'dance-score-low') {
-        console.log('Say "Well, I think you can do better next time"')''
+        console.log('Say "Well, I think you can do better next time"');
         file = 'resource/dance-score-low.mp3';
     } else {
         // Can't find any match voice, early return here.
