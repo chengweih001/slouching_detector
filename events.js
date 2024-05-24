@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
         (e) => {
             let score = e.detail.score;
             console.log(`got dance score ${score}`);
-            if (score >= 120) {
+            if (score >= 300) {
                 Speak("dance-score-high");
             } else if (score >= 50) {
                 Speak("dance-score-mid");
