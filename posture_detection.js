@@ -181,7 +181,7 @@ function updateDanceScore(pose){
     }
 }
 function getScore() {
-    return danceScore / 1000;
+    return danceScore / 500;
 }
 function getDanceScore(){
     let score = getScore();
