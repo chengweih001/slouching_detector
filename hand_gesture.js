@@ -101,7 +101,7 @@ async function predictWebcam() {
                 const handedness = results.handednesses[i][j].displayName;
                 output.push(`GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`);
 
-                if (categoryName != 'None') {
+                if (['Open_Palm', 'Thumb_Up', 'Thumb_Down'].includes(categoryName)) {
                     let now = Date.now();
                     // Gesture event is dispatched when:
                     // - category changed for the first time.
@@ -126,9 +126,8 @@ async function predictWebcam() {
                     if (toDispatchEvent) {
                         window.dispatchEvent(new CustomEvent('Gesture', {detail:{ categoryName: categoryName }}));
                     }
-                    
+                    lastKnowncategoryName = categoryName;
                 }
-                lastKnowncategoryName = categoryName;
             }
         }
         gestureOutput.innerText = output.join('\n');
