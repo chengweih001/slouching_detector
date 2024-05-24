@@ -1,6 +1,8 @@
+let recognition = undefined;
+
 function initializeSpeechRecognition() {
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition = new SpeechRecognition();
+    recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -48,6 +50,24 @@ function initializeSpeechRecognition() {
             }
         };
     }
+
+    recognition.addEventListener(
+        "start",
+        (e) => {
+            console.log('recognition start.');
+        },
+        false,
+    )   
+
+    recognition.addEventListener(
+        "end",
+        (e) => {
+            console.log('recognition end, start again.');
+            // Start speech recognition
+            recognition.start();            
+        },
+        false,
+    )   
 
     // Start speech recognition
     recognition.start();
