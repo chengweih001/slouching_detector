@@ -65,7 +65,6 @@ function initializeSpeechRecognition() {
         (e) => {
             if (enableSpeechRecognition) {
                 // Start speech recognition
-                console.log('recognition end, start again.');
                 recognition.start();
             }
         },
@@ -74,7 +73,6 @@ function initializeSpeechRecognition() {
 
     recognition.addEventListener('error', e => {
         if (e.error === 'not-allowed') {
-            console.log('Speech recognition is not allowed');
             enableSpeechRecognition = false;
         }
     });
