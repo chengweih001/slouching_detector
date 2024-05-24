@@ -166,6 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "robotInitFailed",
         (e) => {
             Speak("oops");
+             // To keep posture detection continue to work, we still update state even the robot initialization failed.
+            setTimeout(() => {
+                curStage = State.NOT_SLOUCHING;
+            }, 2000);
         },
         false,
     )    
