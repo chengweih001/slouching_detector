@@ -159,11 +159,9 @@ function drawPose(pose) {
 
 let danceScore = 0;
 let prevPosition = {leftElbow: null, rightElbow:null}
-let danceScoreTimer;
 function updateDanceScore(pose){
-    if (!danceScoreTimer){
-        danceScoreTimer = Date.now();
-    }
+    document.getElementById("scoreboard").className = "";
+
     if (pose){
         for (let position of pose.keypoints){
             const part = position.part;
@@ -171,7 +169,6 @@ function updateDanceScore(pose){
                 if (position.score > 0.8) {
                     if (prevPosition[part]){
                         danceScore += Math.abs((position.position.x-prevPosition[part].x)*(position.position.y-prevPosition[part].y));
-                        console.log(`current dance score is ${100 * danceScore / (Date.now() - danceScoreTimer)}`);
                     }
                     prevPosition[part] = position.position;
                 } else {
@@ -179,19 +176,20 @@ function updateDanceScore(pose){
                 }
             }
         }
+        let score = getScore();
+        document.getElementById("current-score").innerText = Math.round(score);
     }
 }
-
+function getScore() {
+    return danceScore / 1000;
+}
 function getDanceScore(){
-    let score = danceScore / (Date.now() - danceScoreTimer)*100;
-    console.log(danceScore);
+    let score = getScore();
     console.log(score);
     if (!localStorage['highest_score'] || localStorage['highest_score']<score){
-        localStorage['highest_score'] = score;
+        localStorage['highest_score'] = Math.round(score);
     }
-    danceScoreTimer = null;
     danceScore = 0;
-    document.getElementById("scoreboard").className = "";
-    document.getElementById("score").innerText = Math.round(localStorage['highest_score']);
+    document.getElementById("score").innerText = localStorage['highest_score'];
     document.dispatchEvent(new CustomEvent("danceScored",{detail: {score: score}}));
 }

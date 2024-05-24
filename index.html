@@ -102,7 +102,7 @@
                 position: absolute;
                 right: 2em;
                 text-align: center;
-                width: 140px;
+                width: 180px;
                 background: purple;
                 color: white;
                 top:0em;
@@ -116,8 +116,13 @@
                 margin-top: 0px;
                 font-family: "Verdana";
             }
-            #score {
-                width: 140px;
+            #scoreboard section {
+                display: block;
+                width: 80px;
+                float: left;
+                padding: 5px;   
+            }
+            .score {
                 height: 60px;
                 line-height: 60px;
                 background: #080001;
@@ -125,7 +130,7 @@
                 font-family: "Silkscreen", cursive;
                 font-style: normal;
                 font-weight: 400;
-                font-size: 3em;
+                font-size: 2em;
                 text-align: center;
                 color: #f94f6d;
             }
@@ -141,9 +146,17 @@
             <div id="controls">
                 <button type="button" onclick="toggleDebug()">debug</button>
             </div>
-            <div id="scoreboard" class="invisible">
-            <h4>TOP SCORE</h4>
-            <div id="score"></div>
+            <div id="scoreboard" >
+            <section class="invisible">
+                    <h4>CURRENT SCORE</h4>
+                <div class="score" id="current-score">0</div>
+            </section>
+            <section>
+                <h4>TOP SCORE</h4>
+                <div class="score" id="score">0</div>
+            </section>
+
+            
             </div>
         </div>
         
@@ -206,6 +219,11 @@
                 vRobotWake().then(vRobotBlink);
                 const demosSection = document.getElementById("demos");
                 demosSection.classList.remove("invisible");
+                // Check top score
+                if (localStorage['highest_score']){
+                    document.getElementById('scoreboard').className = "";
+                    document.getElementById('score').innerText = Math.round(localStorage['highest_score']);
+                }
             }
 
             document.addEventListener('DOMContentLoaded', () => {
