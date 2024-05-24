@@ -103,7 +103,12 @@ async function predictWebcam() {
 
                 if (categoryName != 'None') {
                     let now = Date.now();
+                    // Gesture event is dispatched when:
+                    // - category changed for the first time.
+                    // - category remains the same over threshold.
+                    let toDispatchEvent = false;
                     if (lastKnowncategoryName != categoryName) {
+                        toDispatchEvent = true;
                         timer = now;                        
                     } else {
                         let threshold;
@@ -114,9 +119,12 @@ async function predictWebcam() {
                         }
                         // This would send event every `threshold` when user keeps the same gesture.
                         if (now - timer > threshold) {
-                            window.dispatchEvent(new CustomEvent('Gesture', {detail:{ categoryName: categoryName }}));
+                            toDispatchEvent = true;
                             timer = now;
                         }
+                    }
+                    if (toDispatchEvent) {
+                        window.dispatchEvent(new CustomEvent('Gesture', {detail:{ categoryName: categoryName }}));
                     }
                     
                 }
