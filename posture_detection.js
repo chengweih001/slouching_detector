@@ -161,6 +161,7 @@ function updateDanceScore(pose){
                 if (position.score > 0.8) {
                     if (prevPosition[part]){
                         danceScore += Math.abs((position.position.x-prevPosition[part].x)*(position.position.y-prevPosition[part].y));
+                        console.log(`current dance score is ${100 * danceScore / (Date.now() - danceScoreTimer)}`);
                     }
                     prevPosition[part] = position.position;
                 } else {

@@ -39,6 +39,10 @@ class RobotCoach {
         this.initialized_ = false;
 
         this.readSerial();
+
+        document.addEventListener('danceScored', event => {
+            this.writeMessage(`SCORE ${event.detail.score.toFixed(0)}`);
+        });
     }
 
     async initPython() {
@@ -98,7 +102,7 @@ class RobotCoach {
             code = this.queue_.shift();
             const CTRL_D = '\x04';  // Ctrl+D character
             const CTRL_E = '\x05';  // Ctrl+E character
-            console.log(`RUN:\n${code}`)
+            console.log(`Sending to RobotCoach:\n${code}`)
             await writeLinesToSerialPort(this.port_, [CTRL_E, code, CTRL_D]);
         }
     }
@@ -179,7 +183,6 @@ class RobotCoach {
             this.danceMode_ = false;
             this.clearLightMatrix();
             this.resetMotors();
-            this.initPython();
         }
     }
 

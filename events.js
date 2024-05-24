@@ -16,13 +16,17 @@ let curStage = State.INITIALIZING;
 
 let songElement = document.getElementById('song');
 songElement.addEventListener('pause', () => {
-    curStage = State.NOT_SLOUCHING;
-    document.dispatchEvent(new Event("robotDanceStop"));
+    if (curStage === State.DANCING) {
+        curStage = State.NOT_SLOUCHING;
+        document.dispatchEvent(new Event("robotDanceStop"));
+    }
 });
 songElement.addEventListener('ended', () => {
-    curStage = State.NOT_SLOUCHING;
-    songElement.playbackRate = 1;
-    document.dispatchEvent(new Event("robotDanceStop"));
+    if (curStage === State.DANCING) {
+        curStage = State.NOT_SLOUCHING;
+        songElement.playbackRate = 1;
+        document.dispatchEvent(new Event("robotDanceStop"));
+    }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
