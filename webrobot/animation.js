@@ -66,12 +66,16 @@ const vRobotBlink = async () => {
 } 
 
 const vRobotSleep = async () => {
+    console.log(leftPalm.getBoundingClientRect());
+
     heartRotateControl.pause();  
     vRobotHeartBlink(true);
     return gsap.to([eye], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
   }
   
 const vRobotWake = async () => {
+    console.log(leftPalm.getBoundingClientRect());
+
     heartRotateControl.resume();
     vRobotHeartBlink(false);
     return gsap.to([eye], 0.2, { scaleY: 1, yoyo: false, repeat: 0, transformOrigin: 'center'})
@@ -81,6 +85,8 @@ const vRobotWave = async () => {
     if (vRobotDancing || vRobotWaving){
         return;
     }
+    console.log(leftPalm.getBoundingClientRect());
+
     console.log("wave");
     vRobotWaving = true;
     const newPath = 'M 40 130 c -30,0 -30, -20 -30, -60';
@@ -95,17 +101,24 @@ const vRobotWave = async () => {
     gsap.to(leftArm, 0.2, {attr: {d: originalPath}, repeat:0});
     await gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0, rotation: 0, transformOrigin: "center"});
     vRobotWaving = false;
+    console.log(leftPalm.getBoundingClientRect());
+
 }
 
 const vRobotHeartBlink = async (blink) => {
+    console.log(leftPalm.getBoundingClientRect());
+
     if (blink) {
         heartBlinkControl.resume();
     } else {
         heartBlinkControl.pause();
         gsap.set(heart, { opacity:1});        
     }
+    console.log(leftPalm.getBoundingClientRect());
+
 }
 const vRobotDance = async () => {
+    console.log(leftPalm.getBoundingClientRect());
     vRobotDancing = true;
     const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
     const newPath = 'M 40 130 c -50, 20 -70, -10 -70, -10';
@@ -155,6 +168,7 @@ const vRobotDance = async () => {
     gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0});
     gsap.to(rightArm, 0.2, {attr: {d: rightOriginalPath}, repeat:0});
     vRobotDancing = false;
+    console.log(leftPalm.getBoundingClientRect());
     return gsap.to(rightPalm, 0.2, { x: '0px', y: "0px", repeat:0});
 }
   
