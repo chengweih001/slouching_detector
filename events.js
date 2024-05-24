@@ -152,10 +152,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener(
         "robotInitDone",
-        async (e) => {
-            curStage = State.NOT_SLOUCHING;
+        (e) => {
             Speak("hi");
-            await window.robotCoach.wave(360);
+            setTimeout(() => {
+                curStage = State.NOT_SLOUCHING;
+            }, 6000);
+            window.robotCoach.wave(360);
         },
         false,
     )
@@ -168,8 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
         false,
     )    
 
-    window.addEventListener('HeySpiky', event => {
-        console.log(`Recognize HeySpiky with action ${event.detail.action}`);
+    window.addEventListener('HeySparky', event => {
+        console.log(`Recognize HeySparky with action ${event.detail.action}`);
         if (curStage == State.DANCING && !songElement.paused ) {
             console.log(`We are in dancing stage and voice recognition triggered.`);
             if (event.detail.action === 'faster') {

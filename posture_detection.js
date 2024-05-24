@@ -85,7 +85,10 @@ async function initializePostureDetection() {
 
 async function loop(timestamp) {
     webcam.update(); // update the webcam frame
-    await predict();
+    // Stop posture detection during initialization.
+    if(curStage != State.INITIALIZING){
+        await predict();
+    }
     window.requestAnimationFrame(loop);
 }
 async function predict() {
