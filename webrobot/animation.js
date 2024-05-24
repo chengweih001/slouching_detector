@@ -58,34 +58,30 @@ const vRobotMoveDown = async () => {
 
 const vRobotMoveUp = async () => {
     await gsap.to([body, head, arms, legs, hips], 0.3, {y: '0px', yoyo: false, repeat: 0});
-    return vRobotWake();
+    await vRobotWake();
 
 }
 const vRobotBlink = async () => {
-    return gsap.to([eye], 0.2, { scaleY: 0, yoyo: true, repeat: 1, transformOrigin: 'center'})
+    await gsap.to([eye], 0.2, { scaleY: 0, yoyo: true, repeat: 1, transformOrigin: 'center'})
 } 
 
 const vRobotSleep = async () => {
-    console.log(leftPalm.getBoundingClientRect());
-
     heartRotateControl.pause();  
     vRobotHeartBlink(true);
-    return gsap.to([eye], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
+    await gsap.to([eye], 0.2, { scaleY: 0.01, yoyo: false, repeat: 0, transformOrigin: 'center'})
   }
   
 const vRobotWake = async () => {
-    console.log(leftPalm.getBoundingClientRect());
 
     heartRotateControl.resume();
     vRobotHeartBlink(false);
-    return gsap.to([eye], 0.2, { scaleY: 1, yoyo: false, repeat: 0, transformOrigin: 'center'})
+    await gsap.to([eye], 0.2, { scaleY: 1, yoyo: false, repeat: 0, transformOrigin: 'center'})
 }
 let vRobotWaving = false;
 const vRobotWave = async () => {
     if (vRobotDancing || vRobotWaving){
         return;
     }
-    console.log(leftPalm.getBoundingClientRect());
 
     console.log("wave");
     vRobotWaving = true;
@@ -101,24 +97,18 @@ const vRobotWave = async () => {
     gsap.to(leftArm, 0.2, {attr: {d: originalPath}, repeat:0});
     await gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0, rotation: 0, transformOrigin: "center"});
     vRobotWaving = false;
-    console.log(leftPalm.getBoundingClientRect());
-
 }
 
 const vRobotHeartBlink = async (blink) => {
-    console.log(leftPalm.getBoundingClientRect());
-
     if (blink) {
         heartBlinkControl.resume();
     } else {
         heartBlinkControl.pause();
-        gsap.set(heart, { opacity:1});        
+        await gsap.set(heart, { opacity:1});        
     }
-    console.log(leftPalm.getBoundingClientRect());
-
 }
 const vRobotDance = async () => {
-    console.log(leftPalm.getBoundingClientRect());
+    await gsap.to(leftPalm, 0.05, { x: '0px', y: "0px", repeat:0, rotation: 0, transformOrigin: "center"});
     vRobotDancing = true;
     const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
     const newPath = 'M 40 130 c -50, 20 -70, -10 -70, -10';
@@ -132,7 +122,7 @@ const vRobotDance = async () => {
     danceTime = 0
     while(true){
         // dance for 5 times is for debugging when not in dancing state.
-        if (danceTime >= 50 && curStage!=State.DANCING){
+        if (danceTime >= 5 && curStage!=State.DANCING){
             break;
         }
         danceTime+=1;
@@ -144,40 +134,33 @@ const vRobotDance = async () => {
             gsap.to(rightLeg, danceSpeed*2, {attr: {d: "M 102 200 l0,0 -24, 20 24,48"}})
         }
         danceRight = !danceRight;
-        gsap.to(leftPalm, danceSpeed, {x: '-38px', y:'-70px'})
-        gsap.to(leftPalm, danceSpeed, {rotation: 145})
+        gsap.to(leftPalm, danceSpeed, {x: '-40px', y:'-75px', rotation: 145, repeat:0})
         gsap.to(leftArm, danceSpeed, {attr: {d: newPath}, repeat:0});
-        gsap.to(rightPalm, danceSpeed, {x: '50px', y:'-50px'})
-        gsap.to(rightPalm, danceSpeed, {rotation: -145})
+        gsap.to(rightPalm, danceSpeed, {x: '50px', y:'-50px', rotation: -145, repeat:0})
         await gsap.to(rightArm, danceSpeed, {attr: {d: rightNewPath}, repeat:0});
 
-        gsap.to(leftPalm, danceSpeed, {x: '-50px', y:'-48px'})
-        gsap.to(leftPalm, danceSpeed, {rotation: 43})
+        gsap.to(leftPalm, danceSpeed, {x: '-50px', y:'-48px', rotation: 43, repeat:0})
         gsap.to(leftArm, danceSpeed, {attr: {d: newPath2}, repeat:0});
-        gsap.to(rightPalm, danceSpeed, {x: '45px', y:'-40px'})
-        gsap.to(rightPalm, danceSpeed, {rotation: -50})
+        gsap.to(rightPalm, danceSpeed, {x: '45px', y:'-45px', rotation: -50, repeat:0})
         await gsap.to(rightArm, danceSpeed, {attr: {d: rightNewPath2}, repeat:0});
     }
 
     // reset back.
     gsap.to(leftLeg, 0.2, {attr: {d: "M 65 200 l0,0 0, 48"}})
     gsap.to(rightLeg, 0.2, {attr: {d: "M 102 200 l0,0 0,48"}})
-    gsap.to(rightPalm, 0.1, {rotation: 0})
-    gsap.to(leftPalm, 0.1, {rotation: 0})
     gsap.to(leftArm, 0.2, {attr: {d: originalPath}, repeat:0});
-    gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0});
+    gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0, rotation: 0});
     gsap.to(rightArm, 0.2, {attr: {d: rightOriginalPath}, repeat:0});
     vRobotDancing = false;
-    console.log(leftPalm.getBoundingClientRect());
-    return gsap.to(rightPalm, 0.2, { x: '0px', y: "0px", repeat:0});
+    await gsap.to(rightPalm, 0.2, { x: '0px', y: "0px", rotation: 0, repeat:0});
 }
   
 
 // TODO: just rotate for now, hook up proper dance later.
 const vRobotStartDancing = async () => {
-    vRobotMoveUp();
+    await vRobotMoveUp();
     heartRotateControl.duration(0.1);
-    vRobotDance();
+    await vRobotDance();
 }
 
 const vRobotStopDancing = async () => {
