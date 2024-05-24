@@ -176,7 +176,12 @@ function getDanceScore(){
     let score = danceScore / (Date.now() - danceScoreTimer)*100;
     console.log(danceScore);
     console.log(score);
+    if (!localStorage['highest_score'] || localStorage['highest_score']<score){
+        localStorage['highest_score'] = score;
+    }
     danceScoreTimer = null;
     danceScore = 0;
+    document.getElementById("scoreboard").className = "";
+    document.getElementById("score").innerText = Math.round(localStorage['highest_score']);
     document.dispatchEvent(new CustomEvent("danceScored",{detail: {score: score}}));
 }
