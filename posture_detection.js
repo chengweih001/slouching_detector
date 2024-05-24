@@ -46,8 +46,12 @@ const SLOUCHING = 'slouching';
 const SITTING_STRAIGHT = 'sitting straight';
 const STANDING = 'standing';
 
+const MIN_POSTURE_DURATION_MS = 500;
+
 let standing = null;
 let currPosture = UNKNOWN_POSTURE;
+let lastPosture = null;
+let lastPostureTime = null;
 
 let model, webcam, ctx, labelContainer, maxPredictions;
 
@@ -95,6 +99,7 @@ async function predict() {
     const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
     // Prediction 2: run input through teachable machine classification model
     const prediction = await model.predict(posenetOutput);
+    const now = Date.now();
     for (let i = 0; i < maxPredictions; i++) {
         const label =  labels[prediction[i].className];
         const prob = prediction[i].probability.toFixed(2);
@@ -107,9 +112,11 @@ async function predict() {
             } else if (label === 'standing'){
                 newPosture = STANDING;
             }
-            if (currPosture!==newPosture){
+            if (newPosture !== lastPosture) {
+                lastPosture = newPosture;
+                lastPostureTime = now;
+            } else if (currPosture !== newPosture && (now - lastPostureTime) > MIN_POSTURE_DURATION_MS){
                 postureChanged(newPosture);
-                currPosture = newPosture;
             }
         }
         const classPrediction =
