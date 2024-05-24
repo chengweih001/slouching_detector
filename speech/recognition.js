@@ -1,4 +1,5 @@
 let recognition = undefined;
+let enableSpeechRecognition = true;
 
 function initializeSpeechRecognition() {
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -62,12 +63,21 @@ function initializeSpeechRecognition() {
     recognition.addEventListener(
         "end",
         (e) => {
-            console.log('recognition end, start again.');
-            // Start speech recognition
-            recognition.start();            
+            if (enableSpeechRecognition) {
+                // Start speech recognition
+                console.log('recognition end, start again.');
+                recognition.start();
+            }
         },
         false,
     )   
+
+    recognition.addEventListener('error', e => {
+        if (e.error === 'not-allowed') {
+            console.log('Speech recognition is not allowed');
+            enableSpeechRecognition = false;
+        }
+    });
 
     // Start speech recognition
     recognition.start();
