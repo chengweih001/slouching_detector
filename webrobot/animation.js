@@ -74,11 +74,12 @@ const vRobotWake = async () => {
     vRobotHeartBlink(false);
     return gsap.to([eye], 0.2, { scaleY: 1, yoyo: false, repeat: 0, transformOrigin: 'center'})
 }
-
+let vRobotWaving = false;
 const vRobotWave = async () => {
-    if (vRobotDancing){
+    if (vRobotDancing || vRobotWaving){
         return;
     }
+    vRobotWaving = true;
     const newPath = 'M 40 130 c -30,0 -30, -20 -30, -60';
     const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
     gsap.to(leftArm, 0.2, {attr: {d: newPath}, repeat:0});
@@ -89,7 +90,8 @@ const vRobotWave = async () => {
     await gsap.to(leftPalm, 0.1, {rotation: 160, transformOrigin:"top"});
     await gsap.to(leftPalm, 0.1, {rotation: 180, transformOrigin:"top"});
     gsap.to(leftArm, 0.2, {attr: {d: originalPath}, repeat:0});
-    return gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0, rotation: 0, transformOrigin: "center"});
+    await gsap.to(leftPalm, 0.2, { x: '0px', y: "0px", repeat:0, rotation: 0, transformOrigin: "center"});
+    vRobotWaving = false;
 }
 
 const vRobotHeartBlink = async (blink) => {
