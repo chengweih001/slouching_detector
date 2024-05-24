@@ -7,7 +7,9 @@ let vRobotDancing = false;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     robotImage = document.querySelector('#robot-img'); 
-    vRobotInit();
+    if (robotImage.contentDocument.querySelector('#body')){
+        vRobotInit();
+    }
     // In case the svg is not loaded, initiate again after it's loaded.
     robotImage.addEventListener("load", vRobotInit);
 });
@@ -79,6 +81,7 @@ const vRobotWave = async () => {
     if (vRobotDancing || vRobotWaving){
         return;
     }
+    console.log("wave");
     vRobotWaving = true;
     const newPath = 'M 40 130 c -30,0 -30, -20 -30, -60';
     const originalPath = 'M 40 130 c -30,0 -30, 20 -30, 60';
@@ -128,15 +131,15 @@ const vRobotDance = async () => {
             gsap.to(rightLeg, danceSpeed*2, {attr: {d: "M 102 200 l0,0 -24, 20 24,48"}})
         }
         danceRight = !danceRight;
-        gsap.to(leftPalm, danceSpeed, {x: '-48px', y:'-80px'})
+        gsap.to(leftPalm, danceSpeed, {x: '-28px', y:'-65px'})
         gsap.to(leftPalm, danceSpeed, {rotation: 145})
         gsap.to(leftArm, danceSpeed, {attr: {d: newPath}, repeat:0});
         gsap.to(rightPalm, danceSpeed, {x: '50px', y:'-50px'})
         gsap.to(rightPalm, danceSpeed, {rotation: -145})
         await gsap.to(rightArm, danceSpeed, {attr: {d: rightNewPath}, repeat:0});
 
-        gsap.to(leftPalm, danceSpeed, {x: '-50px', y:'-48px'})
-        gsap.to(leftPalm, danceSpeed, {rotation: 50})
+        gsap.to(leftPalm, danceSpeed, {x: '-40px', y:'-48px'})
+        gsap.to(leftPalm, danceSpeed, {rotation: 43})
         gsap.to(leftArm, danceSpeed, {attr: {d: newPath2}, repeat:0});
         gsap.to(rightPalm, danceSpeed, {x: '45px', y:'-40px'})
         gsap.to(rightPalm, danceSpeed, {rotation: -50})

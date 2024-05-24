@@ -190,6 +190,6 @@ function getDanceScore(){
         localStorage['highest_score'] = Math.round(score);
     }
     danceScore = 0;
-    document.getElementById("score").innerText = localStorage['highest_score'];
+    document.getElementById("score").innerText = Math.round(localStorage['highest_score']);
     document.dispatchEvent(new CustomEvent("danceScored",{detail: {score: score}}));
 }
